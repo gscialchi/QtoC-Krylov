@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qtoc_krylov"
+version = "0.1.0"
+description = "Numerical computations for the manuscript `Quantum-to-classical transition in Krylov complexity'"
+
+[tool.setuptools.packages.find]
+where = ["src"]
