@@ -5,10 +5,9 @@ from multiprocessing import Pool
 import numpy as np
 from scipy.integrate import simpson
 
-from utilities import store
+from qtoc_krylov.utilities.store import store
+from qtoc_krylov.utilities.paths import *
 
-STORE_PATH = os.path.dirname(os.path.realpath(__file__))
-STORE_PATH += f'/store/{os.path.basename(__file__)[:-3]}/'
 
 PI = np.pi
 DPI = 2*np.pi
@@ -80,7 +79,7 @@ def evolve_distribution(map, q, p, psi, n_steps):
 
 
 ### Quantum maps
-@store(path=STORE_PATH)
+@store(path=STORE_DIR)
 def q_harper(k, N, qbar=0.5, pbar=0.5):
     """
     Unitary for the quantum Harper map. `qbar` and `pbar` define
@@ -183,7 +182,7 @@ def coherent_state_torus(q, p, qbar, N):
     return ket
 
 
-@store(path=STORE_PATH)
+@store(path=STORE_DIR)
 def coherent_ensemble_torus(f, N, qbar, args=()):
     """
     Density matrix for a classical ensemble of coherent states on the unit

@@ -9,15 +9,12 @@ import numpy as np
 from scipy.linalg import expm
 from scipy.stats import poisson
 from scipy.special import gammaln
-from scipy.integrate import dblquad, simpson
+from scipy.integrate import simpson
 
-from utilities import store
-
-STORE_PATH = os.path.dirname(os.path.realpath(__file__))
-STORE_PATH += f'/store/{os.path.basename(__file__)[:-3]}/'
+from qtoc_krylov.utilities.store import store
+from qtoc_krylov.utilities.paths import *
 
 
-###
 def h_harmonic(cutoffs, hbar=1):
     """
     Harmonic oscillator Hamiltonian with unit frequency and mass, written in
@@ -128,9 +125,11 @@ def coherent_state(q, p, cutoffs, hbar=1):
 def _integration_limits(qlims, plims, hbar=1):
     """
     Given the q and p values that hold f's support, translate those values into
-    the polar coordinates used for integration. This is necessary because
-    dblquad breaks if the integration region is too large compared to the
-    actual integrand's support. See the last example in
+    the polar coordinates used for integration.
+
+    Limiting the integration region to a size comparable to the integrand's
+    support is necessary for integration not to break. For instance, see the
+    last example in:
     http://scipy.github.io/devdocs/reference/generated/scipy.integrate.quad.html
     """
     ## angular limits
@@ -173,7 +172,7 @@ def cutoffs_for_coherent_ensemble(f, qlims, plims, hbar=1):
     return cutoffs_min[0], cutoffs_max[1]
 
 
-@store(path=STORE_PATH)
+@store(path=STORE_DIR)
 def coherent_ensemble(f, qlims, plims, cutoffs, args=(), hbar=1):
     """
     Density matrix for a classical ensemble of coherent states

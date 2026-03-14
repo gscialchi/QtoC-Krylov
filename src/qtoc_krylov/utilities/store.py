@@ -2,9 +2,9 @@
 This library provides a decorator that fulfills a similar but simpler
 functionality to that of the `doer` library. This is mainly intended to be
 used to store frequently used things that may be slow to calculate, like
-Hamiltonians, propagators, etc., for large dimensions.
+Hamiltonians, propagators, etc., for large dimensions. In practice, I use it
+quite indiscriminately.
 """
-
 import os
 import inspect, functools, glob
 
