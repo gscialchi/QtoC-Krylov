@@ -4,7 +4,7 @@ import numpy as np
 ## inner products
 def l2_prod(f, g, x, y):
     """
-    L2 inner product of the distributions <f|g>.
+    L2 inner product of the distributions f and g.
     """
     return np.trapezoid(np.trapezoid(f*g, x=x), x=y)
 
@@ -12,10 +12,6 @@ def l2_prod(f, g, x, y):
 def l2_norm(f, x, y):
     """
     L2 norm of the distribution f.
-
-    NOTE: :norm
-    the distributions `f` themselves are normalized (L1 norm),
-    so their L2 norm won't be equal to 1.
     """
     return l2_prod(f, f, x, y)**0.5
 
@@ -41,7 +37,6 @@ def ket_prod(ket1, ket2):
 def arnoldi_FO_operator(U: np.ndarray,
                         e0: np.ndarray,
                         stop: int = None,
-                        start_from: int = None,
                         prod = frobenius_prod,
                         ):
     """
@@ -60,14 +55,8 @@ def arnoldi_FO_operator(U: np.ndarray,
 
     def norm(e): return np.sqrt(np.real(prod(e, e)))
 
-    if start_from:
-        b_arr = start_from[0]
-        e_arr = start_from[1]
-        n = len(b_arr)
-    else:
-        b_arr = [0]
-        e_arr = [e0 / norm(e0)]
-        n = 1
+    e_arr = [e0 / norm(e0)]
+    n = 1
 
     bn = np.inf
     while bn > 1e-7:
@@ -80,33 +69,23 @@ def arnoldi_FO_operator(U: np.ndarray,
         bn = norm(An)
         e_arr.append(1 / bn * An)
 
-        b_arr.append(bn)
-
         if n >= stop -1:
             break
         n += 1
     print(f'stopped at n={n}. Max. expected stop={expected_stop}.')
 
-    b_arr = np.asarray(np.real(b_arr))
     e_arr = np.asarray(e_arr)
-    return b_arr, e_arr
+    return e_arr
 
 
 def lanczos_FO_state(H: np.ndarray,
                      e0: np.ndarray,
                      stop: int = None,
-                     start_from: int = None,
                      prod = ket_prod,
-                     **kwargs
                      ):
     """
     Full re-orthonormalization Lanczos algorithm for states.
     """
-    if isinstance(H, Qobj):
-        H = H.full()
-    if isinstance(e0, Qobj):
-        e0 = e0.full()
-
     stop = stop or H.shape[0]
     print(f'stop {stop}.')
 
@@ -114,16 +93,8 @@ def lanczos_FO_state(H: np.ndarray,
 
     def norm(e): return np.sqrt(np.real(prod(e, e)))
 
-    if start_from:
-        a_arr = start_from[0]
-        b_arr = start_from[1]
-        e_arr = start_from[2]
-        n = len(b_arr)
-    else:
-        a_arr = [prod(e0, L(e0)) / norm(e0)]
-        b_arr = [0]
-        e_arr = [e0 / norm(e0)]
-        n = 1
+    e_arr = [e0 / norm(e0)]
+    n = 1
 
     bn = np.inf
     while bn > 1e-7:
@@ -137,19 +108,14 @@ def lanczos_FO_state(H: np.ndarray,
         Kn = 1 / bn * An
         an = prod(Kn, L(Kn))
 
-        a_arr.append(an)
-        b_arr.append(bn)
         e_arr.append(Kn)
-
         if n >= stop -1: # ensures that there's always 'stop' elements in basis
             break
         n += 1
     print(f'stopped at n={n}.')
 
-    a_arr = np.array(np.real(a_arr))
-    b_arr = np.array(np.real(b_arr))
     e_arr = np.array(e_arr)
-    return  a_arr, b_arr, e_arr
+    return  e_arr
 
 
 def gram_schmidt_ft(ft, qlim, plim, N, stop=100):
@@ -197,7 +163,7 @@ def krylov_wavefunction_operator(rho_evo, krylov, hbar=1):
     # normalize initial state is for Krylov wavefunction
     rho_evo_normed = rho_evo/operator_norm(rho_evo[0], hbar=hbar)
 
-    # the operator product previously defined
+    # the operator product defined above
     out = np.einsum('tki,nik->tn', rho_evo_normed, krylov)
     out /= (2*np.pi*hbar)
     return out
@@ -240,6 +206,7 @@ def krylov_propagator_kry(u, kry, hbar):
     kry_dag = np.transpose(kry.conj(), axes=(0, 2, 1)) # dag every k inside
     out = np.einsum('mab,bi,nij,ja->mn', kry_dag, u, kry, u.conj().T,
                     optimize=True)/(2*np.pi*hbar)
+    # this assumes the operator inner product defined before
     return out
 
 
@@ -247,4 +214,3 @@ def krylov_propagator_kry(u, kry, hbar):
 def krylov_complexity(wave):
     n = np.arange(wave.shape[1])
     return np.einsum('n,tn->t', n, np.abs(wave)**2)
-
