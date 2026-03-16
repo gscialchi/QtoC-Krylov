@@ -42,11 +42,6 @@ def arnoldi_FO_operator(U: np.ndarray,
     """
     Full re-orthonormalization Arnoldi algorithm for operators.
     """
-    if isinstance(U, Qobj):
-        U = U.full()
-    if isinstance(e0, Qobj):
-        e0 = e0.full()
-
     stop = stop or np.inf
     print(f'stop {stop}.')
 
@@ -149,6 +144,26 @@ def gram_schmidt_ft(ft, qlim, plim, N, stop=100):
 
 
 ##
+def krylov_wavefunction_cl(ft, fk, qlim, plim, N):
+    """
+    Compute classical wavefunction <k_n|psi_t> for all t, n.
+    """
+    q = np.linspace(*qlim, N)
+    p = np.linspace(*plim, N)
+
+    nt = len(ft)
+    nk = len(fk)
+
+    # wavefunction only really makes sense if initial state is normalized
+    ft_normed = ft/l2_norm(ft[0], q, p)
+
+    out = np.zeros((nt, nk))
+    for t, psi_t in enumerate(ft_normed):
+        for n, k_n in enumerate(fk):
+            out[t, n] = l2_prod(psi_t, k_n, q, p)
+    return out
+
+
 def krylov_wavefunction_ket(ket_evo, krylov):
     """
     Compute <k_n|psi_t> for all t, n.
