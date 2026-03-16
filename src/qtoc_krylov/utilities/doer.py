@@ -12,7 +12,7 @@ import json
 import inspect
 import hashlib
 from copy import deepcopy
-from functools import partial
+import functools
 
 import numpy as np
 
