@@ -1,7 +1,6 @@
 """
 Stuff related to the harmonic oscillator.
 """
-import os
 from itertools import combinations
 from multiprocessing import Pool
 

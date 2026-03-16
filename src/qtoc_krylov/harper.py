@@ -1,4 +1,3 @@
-import os
 from itertools import combinations
 from multiprocessing import Pool
 
@@ -29,8 +28,15 @@ def c_harper_inv(k, q_, p_):
 
 
 ### Quantum maps
+"""
+Globally set the Floquet angles explicitly.
+For discussion, see ../test/understanding_floquet_angles.py
+"""
+QBAR, PBAR = (0.5, 0)
+
+
 @store(path=STORE_DIR)
-def q_harper(k, N, qbar=0.5, pbar=0.5):
+def q_harper(k, N, qbar=QBAR, pbar=PBAR):
     """
     Unitary for the quantum Harper map. `qbar` and `pbar` define
     the Floquet angles, such that
@@ -69,7 +75,7 @@ def jacobi_theta(q, p, N, qn):
     return ord0 + ord1 + ord2
 
 
-def husimi_torus_state(q, p, psi, qbar, N):
+def husimi_torus_state(q, p, psi, N, qbar=QBAR):
     """
     Husimi distribution on the unit torus for the state `psi`.
     """
@@ -90,7 +96,7 @@ def husimi_torus_state(q, p, psi, qbar, N):
     return out
 
 
-def husimi_torus_operator(q, p, rho, qbar, N):
+def husimi_torus_operator(q, p, rho, N, qbar=QBAR):
     """
     Husimi distribution on the unit torus for a hermitic operator
     (density matrix) `rho`.
@@ -114,7 +120,7 @@ def husimi_torus_operator(q, p, rho, qbar, N):
 
 
 ##
-def coherent_state_torus(q, p, qbar, N):
+def coherent_state_torus(q, p, N, qbar=QBAR):
     """
     Coherent state on the torus.
     """
@@ -133,7 +139,7 @@ def coherent_state_torus(q, p, qbar, N):
 
 
 @store(path=STORE_DIR)
-def coherent_ensemble_torus(f, N, qbar, args=()):
+def coherent_ensemble_torus(f, N, qbar=QBAR, args=()):
     """
     Density matrix for a classical ensemble of coherent states on the unit
     torus written in the position representation.
