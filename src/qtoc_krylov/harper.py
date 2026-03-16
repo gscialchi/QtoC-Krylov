@@ -28,56 +28,6 @@ def c_harper_inv(k, q_, p_):
     return np.mod(q, 1), np.mod(p, 1)
 
 
-##
-def evolve_map(map, n_steps,
-               points=None,
-               n_evos=None, qlim=[0, 1], plim=[0, 1]):
-    """
-    Concurrently run `n_evos`x`n_evos` evolutions from the map with
-    initial conditions uniformly chosen for `n_steps` iterations of the map.
-    """
-    if points is None:
-        # initial conditions uniformly distributed
-        q0 = np.linspace(*qlim, n_evos)
-        p0 = np.linspace(*plim, n_evos)
-        qq, pp = np.meshgrid(q0, p0)
-
-        q_out = np.zeros((n_steps, n_evos**2))
-        p_out = q_out.copy()
-    else:
-        qq, pp = points
-
-        q_out = np.zeros((n_steps, qq.size))
-        p_out = q_out.copy()
-
-    # set of initial conditions
-    q_out[0,:] = qq.flatten()
-    p_out[0,:] = pp.flatten()
-
-    for n in range(1, n_steps):
-        q_out[n,:], p_out[n,:] = map(q=q_out[n-1,:], p=p_out[n-1,:])
-    return q_out, p_out
-
-
-def evolve_distribution(map, q, p, psi, n_steps):
-    """
-    Evolve a distribution `psi` on phase space according to a
-    measure-preserving map of the form
-        q_ = q + f(p)
-        p_ = p + g(q_)
-    """
-    qq, pp = np.meshgrid(q, p)
-    psi0 = psi(qq, pp)
-    out = np.zeros((n_steps, *psi0.shape))
-
-    out[0] = psi0
-    for n in range(1, n_steps):
-        qq_, pp_ = map(qq, pp)
-        qq, pp = qq_, pp_
-        out[n] = psi(qq, pp)
-    return out
-
-
 ### Quantum maps
 @store(path=STORE_DIR)
 def q_harper(k, N, qbar=0.5, pbar=0.5):
