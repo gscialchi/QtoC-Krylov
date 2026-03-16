@@ -22,7 +22,7 @@ def savefig(fig, savedir, saveformat, *args, **kwargs):
     print(f'Saved: {savedir}')
 
 
-def plot_sequences_correspondence(u_cl, us_qu,
+def plot_sequences_correspondence(u_cl, us_qu, up_to=None,
                                   figsize=(5, 4), size=14, labelsize=11,
                                   linewidth=1.5, nxticks=4,
                                   save=False, savedir=None, saveformat='pdf'):
@@ -46,21 +46,21 @@ def plot_sequences_correspondence(u_cl, us_qu,
         an = np.diag(u, k=0)
         bn = np.append([0], np.diag(u, k=-1)) # add the initial 0
         cn = u[0, :]
-        n = np.arange(len(an))
+        n = np.arange(len(an[:up_to]))
 
-        axes[0].plot(n, an, c=cmap(3-i), linewidth=linewidth)
-        axes[1].plot(n, bn, c=cmap(3+4*3-i), linewidth=linewidth)
-        axes[2].plot(n, cn, c=cmap(3+4*4-i), linewidth=linewidth)
+        axes[0].plot(n, an[:up_to], c=cmap(3-i), linewidth=linewidth)
+        axes[1].plot(n, bn[:up_to], c=cmap(3+4*3-i), linewidth=linewidth)
+        axes[2].plot(n, cn[:up_to], c=cmap(3+4*4-i), linewidth=linewidth)
 
     # classical
     an = np.diag(u_cl, k=0)
     bn = np.append([0], np.diag(u_cl, k=-1)) # add the initial 0
     cn = u_cl[0, :]
-    n = np.arange(len(an))
+    n = np.arange(len(an[:up_to]))
 
-    axes[0].plot(n, an, c='k', linestyle='--', linewidth=linewidth)
-    axes[1].plot(n, bn, c='k', linestyle='--', linewidth=linewidth)
-    axes[2].plot(n, cn, c='k', linestyle='--', linewidth=linewidth)
+    axes[0].plot(n, an[:up_to], c='k', linestyle='--', linewidth=linewidth)
+    axes[1].plot(n, bn[:up_to], c='k', linestyle='--', linewidth=linewidth)
+    axes[2].plot(n, cn[:up_to], c='k', linestyle='--', linewidth=linewidth)
     #  axes[1].legend(frameon=False, ncols=3)
 
     axes[0].set_ylim(-1*(1+0.05), 1*(1+0.05))
