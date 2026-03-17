@@ -73,7 +73,7 @@ def plot_sequences_correspondence(u_cl, us_qu, up_to=None,
     plt.show()
 
 
-def plot_complexity_correspondence(ck_cl, cks_qu,
+def plot_complexity_correspondence(ck_cl, cks_qu, up_to=None,
                                    figsize=(5, 6), size=14, labelsize=11,
                                    linewidth=1.5, nxticks=5, nyticks=4, nlogyticks=3,
                                    save=False, savedir=None, saveformat='pdf',
@@ -104,15 +104,15 @@ def plot_complexity_correspondence(ck_cl, cks_qu,
 
     # quantum
     for i, ck_qu in enumerate(cks_qu):
-        axes[0].plot(ck_qu, color=cmap(3-i), linewidth=linewidth)#,
+        axes[0].plot(ck_qu[:up_to], color=cmap(3-i), linewidth=linewidth)#,
 
         dif = np.abs( (ck_qu - ck_cl)[1:]/ck_cl[1:] )
         dif = np.append([0], dif)
-        axes[1].semilogy(dif, color=cmap(3-i))
+        axes[1].semilogy(dif[:up_to], color=cmap(3-i))
         axes[1].axhline(y=np.mean(dif), linestyle='dashdot', color=cmap(3-i))
 
     # classical
-    axes[0].plot(ck_cl, color='k', linestyle='--', linewidth=linewidth,
+    axes[0].plot(ck_cl[:up_to], color='k', linestyle='--', linewidth=linewidth,
                  label=r'Classical')
 
     fig.tight_layout()

@@ -9,7 +9,8 @@ from qtoc_krylov.misc import *
 from qtoc_krylov.utilities.paths import *
 from qtoc_krylov.utilities.doer import Doer
 
-from plotters import plot_sequences_correspondence
+from plotters import (plot_sequences_correspondence,
+                      plot_complexity_correspondence)
 
 
 #### Setup Doers for data saving & retrieval
@@ -77,10 +78,13 @@ doer_wave.set_fakeargs(map=map, rho=f, stop=stop)
 wave_cl = doer_wave.doit() # get Krylov wavefunction
 
 u_cl = krylov_propagator_wave(wave_cl) # propagator in Krylov basis
+ck_cl = krylov_complexity(wave_cl) # Krylov complexity
 
 
 #### Quantum
 us_qu = [] # propagators in Krylov basis
+cks_qu = np.zeros((len(hs), n_steps)) # Krylov complexities
+
 for i, h in enumerate(hs):
     # find where to cutoff energy levels for the given fidelity, hbar and lims
     cutoffs = cutoffs_for_coherent_ensemble(fid, q_integlims, p_integlims,
@@ -96,15 +100,28 @@ for i, h in enumerate(hs):
                           stop=stop,
                           prod=partial(operator_prod, hbar=h))
 
-    # Calculate quantum Krylov basis via Arnoldi and propagator in Krylov basis
-    rho_kry = doer_arnoldi.doit()
+    doer_evolve_rho.set_args(u=doer_u, rho=doer_rho, n_steps=n_steps)
 
-    u_qu = krylov_propagator_kry(doer_u._doit(), rho_kry, hbar=h)
+    # Calculate quantum
+    rho_evo = doer_evolve_rho.doit() # evolution
+
+    rho_kry = doer_arnoldi.doit() # quantum Krylov basis via Arnoldi
+
+    wave_qu = krylov_wavefunction_operator(rho_evo, rho_kry, hbar=h) # wavefunction
+
+    cks_qu[i, :] = krylov_complexity(wave_qu) # Krylov complexity
+
+    u_qu = krylov_propagator_kry(doer_u._doit(), rho_kry, hbar=h) # propagator
     us_qu.append(u_qu)
 
 
 #### Plot
-figname = 'HO_sequences_correspondence'
+figname = 'Figure_1'
 plot_sequences_correspondence(u_cl, us_qu, up_to=100,
                               save=True,
                               savedir=FIG_DIR+figname)
+
+figname = 'Figure_2'
+plot_complexity_correspondence(ck_cl, cks_qu, up_to=200,
+                               save=True,
+                               savedir=FIG_DIR + figname)
