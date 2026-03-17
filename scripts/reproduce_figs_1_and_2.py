@@ -49,7 +49,7 @@ r = (q0**2+p0**2)**0.5 + 5*s # 5 sigma space between packet center and limits
 qlim = [-r, r]
 plim = qlim
 
-f = partial(gauss_2D, x0=q0, y0=p0, s=s) # initial classial distribution
+f = partial(gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
 map = partial(harmonic_map_inv, dt=dt) # inverse harmonic map
 
 hs = 1/np.asarray([2**4, 2**5, 2**6, 2**7]) # values of hbar to evaluate at
@@ -60,7 +60,7 @@ nsig = 5 # n sigma padding for integration lims & cutoffs
 q_integlims = (q0 - nsig*s, q0 + nsig*s)
 p_integlims = (p0 - nsig*s, p0 + nsig*s)
 
-doer_rho.set_args(args=(q0, p0, s)) # set parameters for quantum distribution
+doer_rho.set_args(args=(q0, p0, s)) # set parameters for initial quantum distribution
 
 
 #### Classical
@@ -71,9 +71,9 @@ evo_cl = doer_evolve_f.doit() # get evolution
 
 doer_gs.set_args(ft=evo_cl, qlim=qlim, plim=plim, N=N_res, stop=stop)
 doer_gs.set_fakeargs(map=map, rho=f)
-krylov_cl = doer_gs.doit() # get Krylov via Gram-Schmidt
+kry_cl = doer_gs.doit() # get Krylov via Gram-Schmidt
 
-doer_wave.set_args(ft=evo_cl, fk=krylov_cl, qlim=qlim, plim=plim, N=N_res)
+doer_wave.set_args(ft=evo_cl, fk=kry_cl, qlim=qlim, plim=plim, N=N_res)
 doer_wave.set_fakeargs(map=map, rho=f, stop=stop)
 wave_cl = doer_wave.doit() # get Krylov wavefunction
 
@@ -103,15 +103,15 @@ for i, h in enumerate(hs):
     doer_evolve_rho.set_args(u=doer_u, rho=doer_rho, n_steps=n_steps)
 
     # Calculate quantum
-    rho_evo = doer_evolve_rho.doit() # evolution
+    evo_qu = doer_evolve_rho.doit() # evolution
 
-    rho_kry = doer_arnoldi.doit() # quantum Krylov basis via Arnoldi
+    kry_qu = doer_arnoldi.doit() # quantum Krylov basis via Arnoldi
 
-    wave_qu = krylov_wavefunction_operator(rho_evo, rho_kry, hbar=h) # wavefunction
+    wave_qu = krylov_wavefunction_operator(evo_qu, kry_qu, hbar=h) # wavefunction
 
     cks_qu[i, :] = krylov_complexity(wave_qu) # Krylov complexity
 
-    u_qu = krylov_propagator_kry(doer_u._doit(), rho_kry, hbar=h) # propagator
+    u_qu = krylov_propagator_kry(doer_u._doit(), kry_qu, hbar=h) # propagator
     us_qu.append(u_qu)
 
 
@@ -119,7 +119,7 @@ for i, h in enumerate(hs):
 figname = 'Figure_1'
 plot_sequences_correspondence(u_cl, us_qu, up_to=100,
                               save=True,
-                              savedir=FIG_DIR+figname)
+                              savedir=FIG_DIR + figname)
 
 figname = 'Figure_2'
 plot_complexity_correspondence(ck_cl, cks_qu, up_to=200,
