@@ -1,6 +1,6 @@
 from functools import partial
 
-import numpy as mp
+import numpy as np
 
 from qtoc_krylov.harper import *
 from qtoc_krylov.evolve import *
