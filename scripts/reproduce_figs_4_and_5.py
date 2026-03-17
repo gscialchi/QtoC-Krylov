@@ -2,7 +2,7 @@ from functools import partial
 
 import numpy as mp
 
-from qtoc_krylov.harmonic import *
+from qtoc_krylov.harper import *
 from qtoc_krylov.evolve import *
 from qtoc_krylov.krylov import *
 from qtoc_krylov.misc import *
@@ -25,40 +25,29 @@ doer_evolve_rho = Doer(evolve_operator, path=CALC_DIR)
 
 doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR)
 
-doer_rho = Doer(coherent_ensemble, args={'f': gauss_2D})
+doer_rho = Doer(coherent_ensemble_torus, args={'f': gauss_2D})
 
-doer_u = Doer(u_harmonic)
+doer_u = Doer(q_harper)
 
 
 #### Calculation parameters
 n_steps = 200 # number of time-steps
 stop = n_steps # when to stop calculating Krylov
 
-q0, p0 = 1, 0 # center of initial state in phase space
-s = 0.1 # standard deviation for classical distribution
-
-# fix dt such that in one timestep there is some overlap (if a<~1)
-a = 0.5
-dt = a * 2*s/(q0**2 + p0**2)**0.5
+k = 0.05 # map parameter
+q0, p0 = 0.4, 0.5 # center of initial state in phase space
+s = 0.025 # standard deviation for classical distribution
 
 # number of points to evaluate classical distribution
 N_res = 300 # make sure is enough to resolve packet!
 
 # define limits of phase space where the distribution is evaluated
-r = (q0**2+p0**2)**0.5 + 5*s # 5 sigma space between packet center and limits
-qlim = [-r, r]
-plim = qlim
+qlim, plim = [0, 1], [0, 1] # the whole unit torus
 
-f = partial(gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
-map = partial(harmonic_map_inv, dt=dt) # inverse harmonic map
+f = partial(periodic_gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
+map = partial(c_harper_inv, k) # inverse harper map
 
-hs = 1/np.asarray([2**4, 2**5, 2**6, 2**7]) # values of hbar to evaluate at
-fid = 1-1e-9 # fidelity of truncated quantum coherent state
-
-# integration limits that will be used to calculate the quantum initial state
-nsig = 5 # n sigma padding for integration lims & cutoffs
-q_integlims = (q0 - nsig*s, q0 + nsig*s)
-p_integlims = (p0 - nsig*s, p0 + nsig*s)
+N_qus = np.asarray([2**5, 2**6, 2**7, 2**8])) # values of quantum dimension
 
 doer_rho.set_args(args=(q0, p0, s)) # parameters for initial quantum distribution
 
@@ -85,19 +74,15 @@ ck_cl = krylov_complexity(wave_cl) # Krylov complexity
 us_qu = [] # propagators in Krylov basis
 cks_qu = np.zeros((len(hs), n_steps)) # Krylov complexities
 
-for i, h in enumerate(hs):
-    # find where to cutoff energy levels for the given fidelity, hbar and lims
-    cutoffs = cutoffs_for_coherent_ensemble(fid, q_integlims, p_integlims,
-                                            hbar=h)
+for i, N_qu in enumerate(N_qus):
+    h = 1/(2*np.pi*N_qu) # hbar correspoding to N_qu
 
-    # Apply parameters for given value of hbar
-    doer_rho.set_args(qlims=q_integlims, plims=p_integlims, cutoffs=cutoffs,
-                      hbar=h)
+    # Apply parameters for given value of N_qu
+    doer_rho.set_args(N=N_qu, args=(q0, p0, s))
 
-    doer_u.set_args(dt=dt, cutoffs=cutoffs, hbar=h)
+    doer_u.set_args(k=k, N=N_qu)
 
-    doer_arnoldi.set_args(U=doer_u, e0=doer_rho,
-                          stop=stop,
+    doer_arnoldi.set_args(U=doer_u, e0=doer_rho, stop=stop,
                           prod=partial(operator_prod, hbar=h))
 
     doer_evolve_rho.set_args(u=doer_u, rho=doer_rho, n_steps=n_steps)
@@ -111,17 +96,17 @@ for i, h in enumerate(hs):
 
     cks_qu[i, :] = krylov_complexity(wave_qu) # Krylov complexity
 
-    u_qu = krylov_propagator_kry(doer_u._doit(), kry_qu, hbar=h) # propagator
+    u_qu = krylov_propagator_kry(doer_u._doit(), kry_qu, hbar=h)
     us_qu.append(u_qu)
 
 
 #### Plot
-figname = 'Figure_1'
+figname = 'Figure_4'
 plot_sequences_correspondence(u_cl, us_qu, up_to=100,
                               save=True,
                               savedir=FIG_DIR + figname)
 
-figname = 'Figure_2'
+figname = 'Figure_5'
 plot_complexity_correspondence(ck_cl, cks_qu, up_to=200,
                                save=True,
                                savedir=FIG_DIR + figname)
