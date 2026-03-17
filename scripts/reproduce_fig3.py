@@ -25,7 +25,7 @@ doer_u = Doer(u_harmonic)
 
 
 #### Calculation parameters
-n_steps = 200 # number of time-steps
+n_steps = 60 # number of time-steps
 stop = n_steps # when to stop calculating Krylov
 
 q0, p0 = 1, 0 # center of position initial state in phase space
@@ -46,7 +46,7 @@ plim = qlim
 f = partial(gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
 map = partial(harmonic_map_inv, dt=dt) # inverse harmonic map
 
-hs = 1/np.asarray([2**5, 2**7]) # values of hbar to evaluate at
+hs = 1/np.asarray([2**5, 2**8]) # values of hbar to evaluate at
 fid = 1-1e-9 # fidelity of truncated quantum coherent state
 
 # integration limits that will be used to calculate the quantum initial state
@@ -102,6 +102,7 @@ qq0 = 2*np.linspace(*qlim, 2*15); pp0 = np.zeros_like(qq0)
 points = [qq0, pp0]
 
 figname = 'Figure_3'
+# calculation of Husimi distributions is inside plotter
 plot_states_correspondence(kry_cl, krys_qu,
                            qlim, plim, N_res,
                            hbars=hs,

@@ -8,6 +8,7 @@ from matplotlib import rc
 rc('text', usetex=True)
 rc('text.latex', preamble=r'\usepackage{physics}')
 
+from qtoc_krylov.evolve import evolve_map
 from qtoc_krylov.harmonic import husimi_operator, husimi_state
 from qtoc_krylov.harper import husimi_torus_operator, husimi_torus_state
 
