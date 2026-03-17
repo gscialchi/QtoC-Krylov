@@ -111,8 +111,8 @@ def plot_complexity_correspondence(ck_cl, cks_qu, up_to=None,
         axes[0].plot(ck_qu[:up_to], color=cmap(3-i), linewidth=linewidth)
 
         dif = np.abs( (ck_qu - ck_cl)[1:]/ck_cl[1:] )
-        dif = np.append([0], dif)
-        axes[1].semilogy(dif[:up_to], color=cmap(3-i))
+        dif = np.append([0], dif)[:up_to]
+        axes[1].semilogy(dif, color=cmap(3-i))
         axes[1].axhline(y=np.mean(dif), linestyle='dashdot', color=cmap(3-i))
 
     # classical
@@ -369,7 +369,7 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
         plt.show()
 
 
-def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs,
+def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs, up_to=None,
                                       plot_dif=False, inset_pos=None,
                                       figsize=(5, 6), size=14, labelsize=11,
                                       linewidth=1.5, nxticks=5, nyticks=4, nlogyticks=3,
@@ -396,13 +396,13 @@ def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs,
     cmap = mpl.colormaps['tab20b']
 
     for i in range(len(hs)):
-        axes[0].plot(cl[i], color=cmap(3-i),
+        axes[0].plot(cl[i][:up_to], color=cmap(3-i),
                      linestyle='--', linewidth=linewidth)
-        axes[1].plot(cl[i], color=cmap(3-i),
+        axes[1].plot(cl[i][:up_to], color=cmap(3-i),
                      linestyle='--', linewidth=linewidth)
 
-        axes[0].plot(pure[i], color=cmap(3-i), linewidth=linewidth)
-        axes[1].plot(ket[i], color=cmap(3-i), linewidth=linewidth)
+        axes[0].plot(pure[i][:up_to], color=cmap(3-i), linewidth=linewidth)
+        axes[1].plot(ket[i][:up_to], color=cmap(3-i), linewidth=linewidth)
 
     if plot_dif:
         axi = axes[0].inset_axes(inset_pos)
@@ -410,7 +410,7 @@ def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs,
 
         for i in range(len(hs)):
             dif_pure = np.abs( (pure[i] - cl[i])[1:]/cl[i][1:] )
-            dif_pure = np.append([0], dif_pure)
+            dif_pure = np.append([0], dif_pure)[:up_to]
 
             axi.semilogy(dif_pure, color=cmap(3-i))
             axi.axhline(y=np.mean(dif_pure), linestyle='dashdot', color=cmap(3-i))
