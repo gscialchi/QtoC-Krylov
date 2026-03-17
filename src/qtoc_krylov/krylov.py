@@ -73,13 +73,14 @@ def arnoldi_FO_operator(U: np.ndarray,
     return e_arr
 
 
-def lanczos_FO_state(H: np.ndarray,
-                     e0: np.ndarray,
-                     stop: int = None,
-                     prod = ket_prod,
-                     ):
+def lanczos_FO_ket(H: np.ndarray,
+                   e0: np.ndarray,
+                   stop: int = None,
+                   prod = ket_prod,
+                   ):
     """
-    Full re-orthonormalization Lanczos algorithm for states.
+    Full re-orthonormalization Lanczos algorithm for kets.
+    Essentially algorithmically equivalent to the Arnoldi iteration.
     """
     stop = stop or H.shape[0]
     print(f'stop {stop}.')
@@ -109,7 +110,7 @@ def lanczos_FO_state(H: np.ndarray,
         n += 1
     print(f'stopped at n={n}.')
 
-    e_arr = np.array(e_arr)
+    e_arr = np.asarray(e_arr)
     return  e_arr
 
 
