@@ -108,7 +108,7 @@ def plot_complexity_correspondence(ck_cl, cks_qu, up_to=None,
 
     # quantum
     for i, ck_qu in enumerate(cks_qu):
-        axes[0].plot(ck_qu[:up_to], color=cmap(3-i), linewidth=linewidth)#,
+        axes[0].plot(ck_qu[:up_to], color=cmap(3-i), linewidth=linewidth)
 
         dif = np.abs( (ck_qu - ck_cl)[1:]/ck_cl[1:] )
         dif = np.append([0], dif)

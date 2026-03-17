@@ -47,7 +47,7 @@ qlim, plim = [0, 1], [0, 1] # the whole unit torus
 f = partial(periodic_gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
 map = partial(c_harper_inv, k) # inverse harper map
 
-N_qus = np.asarray([2**5, 2**6, 2**7, 2**8])) # values of quantum dimension
+N_qus = np.asarray([2**5, 2**6, 2**7, 2**8]) # values of quantum dimension
 
 doer_rho.set_args(args=(q0, p0, s)) # parameters for initial quantum distribution
 
@@ -72,13 +72,13 @@ ck_cl = krylov_complexity(wave_cl) # Krylov complexity
 
 #### Quantum
 us_qu = [] # propagators in Krylov basis
-cks_qu = np.zeros((len(hs), n_steps)) # Krylov complexities
+cks_qu = np.zeros((len(N_qus), n_steps)) # Krylov complexities
 
 for i, N_qu in enumerate(N_qus):
     h = 1/(2*np.pi*N_qu) # hbar correspoding to N_qu
 
     # Apply parameters for given value of N_qu
-    doer_rho.set_args(N=N_qu, args=(q0, p0, s))
+    doer_rho.set_args(N=N_qu)
 
     doer_u.set_args(k=k, N=N_qu)
 
@@ -102,11 +102,12 @@ for i, N_qu in enumerate(N_qus):
 
 #### Plot
 figname = 'Figure_4'
-plot_sequences_correspondence(u_cl, us_qu, up_to=100,
-                              save=True,
-                              savedir=FIG_DIR + figname)
+#  plot_sequences_correspondence(u_cl, us_qu, up_to=100,
+                              #  save=True,
+                              #  savedir=FIG_DIR + figname)
 
 figname = 'Figure_5'
 plot_complexity_correspondence(ck_cl, cks_qu, up_to=200,
+                               nlogyticks=2,
                                save=True,
                                savedir=FIG_DIR + figname)
