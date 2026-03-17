@@ -1,94 +1,117 @@
-# make copies to avoid conflicts
-doer_evolve_f = doer_evolve_distribution.copy()
-doer_evolve_rho = doer_evolve_operator.copy()
-doer_evolve_k = doer_evolve_ket.copy()
-doer_wave = doer_wavefunction_cl.copy()
+from functools import partial
 
-doer_gs = doer_gram_schmidt.copy()
-doer_arnoldi = doer_arnoldi_operator.copy()
-doer_arnoldi_k = doer_arnoldi_ket.copy()
+import numpy as np
 
-doer_pure = doer_pure_coherent_torus.copy()
-doer_ket = doer_ket_coherent_torus.copy()
+from qtoc_krylov.harper import *
+from qtoc_krylov.evolve import *
+from qtoc_krylov.krylov import *
+from qtoc_krylov.misc import *
+from qtoc_krylov.utilities.paths import *
+from qtoc_krylov.utilities.doer import Doer
 
-doer_u = doer_u_harper.copy()
+from plotters import plot_complexity_ket_pure_cl_limit
 
-# global parameters
-n_steps = 200
-stop = n_steps
-k = 0.05
-q0, p0 = 0.4, 0.5
-N_qu = 2**8
-h = 1/(2*np.pi*N_qu)
-s = h**0.5 # classical standard deviation matching quantum
 
-doer_u.set_args(k=k, N=N_qu)
+#### Setup Doers for data saving & retrieval
+doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR)
 
-## pure state
-doer_pure.set_args(q=q0, p=p0, N=N_qu)
+doer_evolve_pure = Doer(evolve_operator, path=CALC_DIR)
 
-doer_evolve_rho.set_args(u=doer_u, rho=doer_pure, n_steps=n_steps)
-evo_pure = doer_evolve_rho.doit()
+doer_evolve_ket = Doer(evolve_ket, path=CALC_DIR)
 
-doer_arnoldi.set_args(U=doer_u, e0=doer_pure,
-                      stop=stop,
-                      prod=partial(operator_prod, hbar=h))
-kry_pure = doer_arnoldi.doit()
+doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR)
 
-wave_pure = krylov_wavefunction_operator(evo_pure, kry_pure, hbar=h)
-ck_pure = krylov_complexity(wave_pure)
+doer_wave = Doer(krylov_wavefunction_cl, ignore_args=['ft', 'fk'],
+                 path=CALC_DIR)
 
-## ket
-doer_ket.set_args(q=q0, p=p0, N=N_qu)
+doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR)
 
-doer_evolve_k.set_args(u=doer_u, psi=doer_ket, n_steps=n_steps)
-evo_ket = doer_evolve_k.doit()
+doer_lanczos = Doer(lanczos_FO_ket, path=CALC_DIR)
 
-doer_arnoldi_k.set_args(H=doer_u, e0=doer_ket, stop=stop)
-kry_ket = doer_arnoldi_k.doit()
+doer_ket = Doer(coherent_state_torus)
 
-wave_ket = krylov_wavefunction_ket(evo_ket, kry_ket)
-ck_ket = krylov_complexity(wave_ket)
+doer_pure = Doer(pure_coherent_torus)
 
-## Classical
-N_cl = 300
-qlim, plim = [0, 1], [0, 1]
+doer_u = Doer(q_harper)
 
-f = partial(periodic_gauss_2D, x0=q0, y0=p0, s=s)
-map = partial(c_harper_inv, k)
 
-doer_evolve_f.set_args(map=map,
-                       qlim=qlim, plim=plim, N=N_cl,
-                       rho=f, n_steps=n_steps)
-ft = doer_evolve_f.doit()
+#### Calculation parameters
+n_steps = 200 # number of time-steps
+stop = n_steps # when to stop calculating Krylov
 
-doer_gs.set_args(ft=ft, qlim=qlim, plim=plim, N=N_cl, stop=stop)
-doer_gs.set_fakeargs(map=map, rho=f)
-kry_cl = doer_gs.doit()
+k = 0.05 # map parameter
+q0, p0 = 0.4, 0.5 # center of initial state in phase space
 
-doer_wave.set_args(ft=ft, fk=kry_cl, qlim=qlim, plim=plim, N=N_cl)
-doer_wave.set_fakeargs(map=map, rho=f, stop=stop)
-wave_cl = doer_wave.doit()
+# number of points to evaluate classical distribution
+N_res = 300 # make sure is enough to resolve packet!
 
-ck_cl = krylov_complexity(wave_cl)
+# define limits of phase space where the distribution is evaluated
+qlim, plim = [0, 1], [0, 1] # the whole unit torus
 
-## plot states
-which = [0, 17, 55] # which states to show
+N_qus = np.asarray([2**6, 2**7, 2**8, 2**9]) # values of quantum dimension
 
-# points for drawing classical trayectories
-# points for drawing classical trayectories
-point_map = partial(c_harper, k)
-qq0 = 2*np.linspace(*qlim, 2*25); pp0 = 1-qq0
-qq0 = np.append(qq0, [0.05/3]); pp0 = np.append(pp0, [0.5])
-# ^ an extra point at the hyperbolic point
-points = [qq0, pp0]
 
-figname = f'manuscript/Harper_ket_pure_cl_states'
-plot_states_ket_pure_cl(kry_cl, kry_ket, kry_pure,
-                              qlim, plim, N_cl, N_q=N_qu,
-                              points=points, map=point_map,
-                              norm_from_k0=True,
-                              which=which,
-                              #  save=True,
-                              savedir=FIG_DIR + figname,
-                              saveformat='png')
+#### Calculate
+cks_cl = np.zeros((len(N_qus), n_steps)) # classical Krylov complexities
+cks_pure = np.zeros_like(cks_cl) # quantum Krylov complexities (pure density matrix)
+cks_ket = np.zeros_like(cks_cl) # quantum Krylov complexities (ket)
+
+for i, N_qu in enumerate(N_qus):
+    h = 1/(2*np.pi*N_qu) # hbar correspoding to N_qu
+    s = h**0.5 # classical standard deviation matching quantum
+
+    #### Quantum
+    doer_u.set_args(k=k, N=N_qu)
+
+    ## pure density matrix
+    doer_pure.set_args(q=q0, p=p0, N=N_qu)
+
+    doer_evolve_pure.set_args(u=doer_u, rho=doer_pure, n_steps=n_steps)
+    evo_pure = doer_evolve_pure.doit()
+
+    doer_arnoldi.set_args(U=doer_u, e0=doer_pure,
+                          stop=stop,
+                          prod=partial(operator_prod, hbar=h))
+    kry_pure = doer_arnoldi.doit()
+
+    wave_pure = krylov_wavefunction_operator(evo_pure, kry_pure, hbar=h)
+    cks_pure[i, :] = krylov_complexity(wave_pure)
+
+    ## ket
+    doer_ket.set_args(q=q0, p=p0, N=N_qu)
+
+    doer_evolve_ket.set_args(u=doer_u, psi=doer_ket, n_steps=n_steps)
+    evo_ket = doer_evolve_ket.doit()
+
+    doer_lanczos.set_args(H=doer_u, e0=doer_ket, stop=stop)
+    kry_ket = doer_lanczos.doit()
+
+    wave_ket = krylov_wavefunction_ket(evo_ket, kry_ket)
+    cks_ket[i, :] = krylov_complexity(wave_ket)
+
+    #### Classical
+    f = partial(periodic_gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
+    map = partial(c_harper_inv, k) # inverse harper map
+
+    doer_evolve_f.set_args(map=map,
+                           qlim=qlim, plim=plim, N=N_res,
+                           rho=f, n_steps=n_steps)
+    evo_cl = doer_evolve_f.doit()
+
+    doer_gs.set_args(ft=evo_cl, qlim=qlim, plim=plim, N=N_res, stop=stop)
+    doer_gs.set_fakeargs(map=map, rho=f)
+    kry_cl = doer_gs.doit() # get Krylov via Gram-Schmidt
+
+    doer_wave.set_args(ft=evo_cl, fk=kry_cl, qlim=qlim, plim=plim, N=N_res)
+    doer_wave.set_fakeargs(map=map, rho=f, stop=stop)
+    wave_cl = doer_wave.doit() # get Krylov wavefunction
+
+    cks_cl[i, :] = krylov_complexity(wave_cl)
+
+
+#### Plot
+figname = 'Figure_7'
+plot_complexity_ket_pure_cl_limit(cks_cl, cks_ket, cks_pure, N_qus, up_to=200,
+                                  plot_dif=True, inset_pos=[0.1125, 0.475, 0.5, 0.5],
+                                  save=True,
+                                  savedir=FIG_DIR + figname)
