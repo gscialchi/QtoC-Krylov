@@ -51,7 +51,7 @@ def evolve_distribution(map, qlim, plim, N, rho, n_steps):
     return out
 
 
-def evolve_state(u, psi, n_steps):
+def evolve_ket(u, psi, n_steps):
     """ Evolve a ket with the unitary for `n_steps` time steps. """
     out = [psi]
     psi_t = psi
