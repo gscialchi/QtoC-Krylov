@@ -60,7 +60,7 @@ for i, N_qu in enumerate(N_qus):
     h = 1/(2*np.pi*N_qu) # hbar correspoding to N_qu
     s = h**0.5 # classical standard deviation matching quantum
 
-    #### Quantum
+    ### Quantum
     doer_u.set_args(k=k, N=N_qu)
 
     ## pure density matrix
@@ -89,7 +89,7 @@ for i, N_qu in enumerate(N_qus):
     wave_ket = krylov_wavefunction_ket(evo_ket, kry_ket)
     cks_ket[i, :] = krylov_complexity(wave_ket)
 
-    #### Classical
+    ### Classical
     f = partial(periodic_gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
     map = partial(c_harper_inv, k) # inverse harper map
 
