@@ -135,7 +135,7 @@ def coherent_state_torus(q, p, N, qbar=QBAR):
         norm += np.abs(theta_m)**2
     norm = norm**0.5
     ket /= norm
-    return ket
+    return ket.reshape((N, 1))
 
 
 @store(path=STORE_DIR)
@@ -196,3 +196,11 @@ def coherent_ensemble_torus(f, N, qbar=QBAR, args=()):
     if abs(1 - trace) > 1e-4:
         print('WARNING: trace is not 1. Integration limits may be wrong or point density too low.')
     return out
+
+
+def pure_coherent_torus(q, p, N, qbar=QBAR):
+    """
+    Pure coherent-state density matrix on the torus.
+    """
+    ket = coherent_state_torus(q, p, N, qbar)
+    return np.outer(ket, ket.conj())
