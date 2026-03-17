@@ -8,6 +8,9 @@ from matplotlib import rc
 rc('text', usetex=True)
 rc('text.latex', preamble=r'\usepackage{physics}')
 
+from qtoc_krylov.harmonic import husimi_operator, husimi_state
+from qtoc_krylov.harper import husimi_torus_operator, husimi_torus_state
+
 
 def savefig(fig, savedir, saveformat, *args, **kwargs):
     """
@@ -220,7 +223,7 @@ def plot_states_correspondence(cl, qus, qlim, plim, N, hbars=None, Nqus=None,
             else:
                 qu_k = qu[k]
                 N_q = qu_k.shape[0]
-                hus = husimi_torus_operator(q, p, qu_k, QBAR, N_q)
+                hus = husimi_torus_operator(q, p, qu_k, N_q)
 
             if norm_from_k0 and (n == 0):
                 kmax = np.max(np.abs(hus))
@@ -327,7 +330,7 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
         if not cutoffs is None:
             hus_ket = husimi_state(q, p, ket[k], cutoffs, hbar=hbar)
         else:
-            hus_ket = husimi_torus_state(q, p, ket[k], QBAR, N_q)
+            hus_ket = husimi_torus_state(q, p, ket[k], N_q)
 
         if norm_from_k0 and (n == 0):
             kmax_ket = np.max(np.abs(hus_ket))
@@ -345,7 +348,7 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
         if not cutoffs is None:
             hus_pure = husimi_operator(q, p, pure[k], cutoffs, hbar=hbar)
         else:
-            hus_pure = husimi_torus_operator(q, p, pure[k], QBAR, N_q)
+            hus_pure = husimi_torus_operator(q, p, pure[k], N_q)
 
         if norm_from_k0 and (n == 0):
             kmax_pure = np.max(np.abs(hus_pure))
