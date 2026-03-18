@@ -1,0 +1,54 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{none/global//global/global}
+  \entry{PLeboeuf_1990}{article}{}
+    \name{author}{2}{}{%
+      {{hash=LP}{%
+         family={Leboeuf},
+         familyi={L\bibinitperiod},
+         given={P},
+         giveni={P},
+      }}%
+      {{hash=VA}{%
+         family={Voros},
+         familyi={V\bibinitperiod},
+         given={A},
+         giveni={A},
+      }}%
+    }
+    \strng{namehash}{LPVA1}
+    \strng{fullhash}{LPVA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb 10.1088/0305-4470/23/10/017
+    \endverb
+    \field{number}{10}
+    \field{pages}{1765}
+    \field{title}{Chaos-revealing multiplicative representation of quantum
+  eigenstates}
+    \verb{url}
+    \verb https://dx.doi.org/10.1088/0305-4470/23/10/017
+    \endverb
+    \field{volume}{23}
+    \field{journaltitle}{Journal of Physics A: Mathematical and General}
+    \field{year}{1990}
+  \endentry
+\enddatalist
+\endinput

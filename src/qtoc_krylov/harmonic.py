@@ -174,7 +174,7 @@ def coherent_ensemble(f, qlims, plims, cutoffs, args=(), hbar=1):
     """
     Density matrix for a classical ensemble of coherent states
     written in the excitation number representation.
-    See: notebook B (orange, beach), p. 88.
+    See: /docs/docs.pdf Section 2.1.
 
     The values `qlims` and `plims` represent f's approximate
     support to carry over the integrations below.

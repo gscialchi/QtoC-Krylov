@@ -59,13 +59,14 @@ def q_harper(k, N, qbar=QBAR, pbar=PBAR):
 ## Husimi distribution on the unit torus
 def jacobi_theta(q, p, N, qn):
     """
-    (Controlled, see ../test/torus_husimi_overflows.py)
     Approximated Jacobi Theta function by selecting a good cutoff
     for the sum. It is accurate to within an atol of at least 1e-9/N
-    for all q, p, qn in the range [0, 1]. See ../test/approx_jacobi_theta.py.
+    for all q, p, qn in the range [0, 1].
 
     Compared to the actual Jacobi Theta, this is equal to
         \exp(-N \pi (q - qn)^2) * jacobi_theta(q, p, N, qn).
+
+    See: /docs/docs.pdf Section 1.
     """
     dq = q - qn
     piN = PI*N
@@ -144,7 +145,7 @@ def coherent_ensemble_torus(f, N, qbar=QBAR, args=()):
     Density matrix for a classical ensemble of coherent states on the unit
     torus written in the position representation.
 
-    See: notebook B (orange, beach), pages 92-93.
+    See: /docs/docs.pdf Section 2.2.
     """
     qlims = [0, 1]
     plims = [0, 1]

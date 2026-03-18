@@ -188,7 +188,9 @@ def krylov_wavefunction_operator(rho_evo, krylov, hbar=1):
 def krylov_propagator_wave(wave):
     """
     Compute the matrix representation of the propagator in the Krylov basis
-    from the wavefunction.
+    from the Krylov wavefunction.
+
+    See: /docs/docs.pdf Section 3.
     """
     nt, nk = wave.shape
     n = min(nt, nk) - 1 # to make the matrix square
