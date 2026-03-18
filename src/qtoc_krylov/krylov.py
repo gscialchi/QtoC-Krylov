@@ -117,8 +117,7 @@ def lanczos_FO_ket(H: np.ndarray,
 def gram_schmidt_ft(ft, qlim, plim, N, stop=100):
     """
     Applies the Gram-Schmidt method to the set of evolved states {ft}.
-    This yields the same results as the Arnoldi iteration.
-    See ../test/arnoldi_vs_gram_schmidt.py.
+    This yields the same basis as the Arnoldi iteration.
     """
     q = np.linspace(*qlim, N)
     p = np.linspace(*plim, N)
@@ -190,8 +189,6 @@ def krylov_propagator_wave(wave):
     """
     Compute the matrix representation of the propagator in the Krylov basis
     from the wavefunction.
-
-    See: Notebook B (orange, beach), pages 103-104.1.
     """
     nt, nk = wave.shape
     n = min(nt, nk) - 1 # to make the matrix square

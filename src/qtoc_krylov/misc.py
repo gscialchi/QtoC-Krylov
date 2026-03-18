@@ -30,7 +30,7 @@ def periodic_gauss_1D(x, m, s):
     if s > 1/(2*np.pi)**0.5:
         raise Exception('A value `s` > 0.4 breaks partial sum approximation.')
     out = np.zeros_like(x)
-    for n in range(-2, 3):
+    for n in range(-2, 3): # sum for periodization. Larger range for larger `s`
         out += np.exp(-(x-m+n)**2/(2*s**2))
     out /= (2*np.pi*s**2)**0.5 # same normalization as usual Gaussian holds
     return out

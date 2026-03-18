@@ -98,8 +98,8 @@ def cutoffs_for_coherent_state(f, q, p, hbar=1):
     Calculate the minimum and maximum number of excitations needed to
     accurately write the coherent state |a>, with a = (q + ip)/sqrt(2*hbar),
     in terms of the number states |n>, with a fidelity of |<a|a_approx>|^2 = f.
-
-    See: notebook B (orange, beach), pages 43-44 and 60.
+    It is equivalent to calculating the confidence interval for a Poisson
+    distribution.
     """
     n, m = poisson(mu=(q**2 + p**2)/(2*hbar)).interval(f**0.5)
     return int(n), int(m)
@@ -110,8 +110,6 @@ def coherent_state(q, p, cutoffs, hbar=1):
     Coherent state on the plane, localized at (q, p), written in the number
     representation, with cut-offs at the n-th and m-th (minimum and maximum)
     excitation states.
-
-    See: notebook B (orange, beach), page 46.
     """
     n, m = cutoffs
     x = np.arange(n, m+1)

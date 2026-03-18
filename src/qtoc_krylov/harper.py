@@ -58,7 +58,7 @@ def q_harper(k, N, qbar=QBAR, pbar=PBAR):
 
 ## Husimi distribution on the unit torus
 def jacobi_theta(q, p, N, qn):
-    r"""
+    """
     (Controlled, see ../test/torus_husimi_overflows.py)
     Approximated Jacobi Theta function by selecting a good cutoff
     for the sum. It is accurate to within an atol of at least 1e-9/N
