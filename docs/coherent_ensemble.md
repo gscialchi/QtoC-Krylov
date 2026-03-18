@@ -1,4 +1,1 @@
-Test\
-$$
-\bra{\phi}
-$$
+$\bra{\phi}$
