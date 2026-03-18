@@ -1,10 +1,14 @@
 """
 This library provides a class that allows for automatically checking whether a
 given calculation has already been made and its results stored. If it has, then
-simply load the data. If it hasn't proceed to calculate and store.
+simply load the data. If it hasn't, proceed to calculate and store.
 
-Files are stored named with a hash code. A look up table is used to link a
-given calculation to the correct hash.
+The basic idea is to keep track of every method and argument that yields a
+final result. The information about the whole pipeline is contained in an
+`infostring`.
+
+Files are stored named with a hash code. A look-up table is used to link a
+given calculation (infostring) to the correct hash.
 """
 
 import os
