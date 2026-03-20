@@ -13,26 +13,30 @@ from plotters import plot_complexity_ket_pure_cl_limit
 
 
 #### Setup Doers for data saving & retrieval
-doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR)
+DISABLE_DOER = False
+# ^ if True, bypasses Doer functionality altogether. Nothing is loaded or saved
 
-doer_evolve_pure = Doer(evolve_operator, path=CALC_DIR)
+doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_evolve_ket = Doer(evolve_ket, path=CALC_DIR)
+doer_evolve_pure = Doer(evolve_operator, path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR)
+doer_evolve_ket = Doer(evolve_ket, path=CALC_DIR, disabled=DISABLE_DOER)
+
+doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR,
+               disabled=DISABLE_DOER)
 
 doer_wave = Doer(krylov_wavefunction_cl, ignore_args=['ft', 'fk'],
-                 path=CALC_DIR)
+                 path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR)
+doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_lanczos = Doer(lanczos_FO_ket, path=CALC_DIR)
+doer_lanczos = Doer(lanczos_FO_ket, path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_ket = Doer(coherent_state_torus)
+doer_ket = Doer(coherent_state_torus, disabled=DISABLE_DOER)
 
-doer_pure = Doer(pure_coherent_torus)
+doer_pure = Doer(pure_coherent_torus, disabled=DISABLE_DOER)
 
-doer_u = Doer(q_harper)
+doer_u = Doer(q_harper, disabled=DISABLE_DOER)
 
 
 #### Calculation parameters

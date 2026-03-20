@@ -13,19 +13,23 @@ from plotters import plot_states_ket_pure_cl
 
 
 #### Setup Doers for data saving & retrieval
-doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR)
+DISABLE_DOER = False
+# ^ if True, bypasses Doer functionality altogether. Nothing is loaded or saved
 
-doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR)
+doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR)
+doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR,
+               disabled=DISABLE_DOER)
 
-doer_lanczos = Doer(lanczos_FO_ket, path=CALC_DIR)
+doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_ket = Doer(coherent_state_torus)
+doer_lanczos = Doer(lanczos_FO_ket, path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_pure = Doer(pure_coherent_torus)
+doer_ket = Doer(coherent_state_torus, disabled=DISABLE_DOER)
 
-doer_u = Doer(q_harper)
+doer_pure = Doer(pure_coherent_torus, disabled=DISABLE_DOER)
+
+doer_u = Doer(q_harper, disabled=DISABLE_DOER)
 
 
 #### Calculation parameters

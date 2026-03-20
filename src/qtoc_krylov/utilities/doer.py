@@ -154,7 +154,7 @@ class Doer:
     def __init__(self, func, alias=None,
                  args=None, fake_args=None, ignore_args=None,
                  ignore_save=None, ignore_out=None, ignore_load=None,
-                 path=None):
+                 path=None, disabled=False):
         if args is None:
             args = {}
         if fake_args is None:
@@ -183,6 +183,8 @@ class Doer:
         self.ignore_out = ignore_out # dont return some part of output
         self.ignore_load = ignore_load # dont return some part of loaded output
         self.path = path
+
+        self.disabled = disabled
 
     def set_args(self, **kwargs):
         self.args = {**self.args, **kwargs}
@@ -244,25 +246,28 @@ class Doer:
         return self.func(**doit_args)
 
     def doit(self, load=True, save=True, replace=False):
-        if load:
-            loaded_data = load_data(self)
-            if not loaded_data is None:
-                data = loaded_data
-            elif save:
-                data = self._doit()
-                save_data(data, self)
+        if not self.disabled:
+            if load:
+                loaded_data = load_data(self)
+                if not loaded_data is None:
+                    data = loaded_data
+                elif save:
+                    data = self._doit()
+                    save_data(data, self)
+                else:
+                    raise FileNotFoundError(f'Data NOT found: {self.get_infostring()}')
+                return _ignore_data(data, self.ignore_load)
             else:
-                raise FileNotFoundError(f'Data NOT found: {self.get_infostring()}')
-            return _ignore_data(data, self.ignore_load)
+                data = self._doit()
+                if save and replace:
+                    delete_entry(self)
+                    delete_data(self)
+                    save_data(data, self)
+                if save and (not replace):
+                    print(f'Not saving (replace is set to False): {self.get_infostring()}')
+                return _ignore_data(data, self.ignore_out)
         else:
-            data = self._doit()
-            if save and replace:
-                delete_entry(self)
-                delete_data(self)
-                save_data(data, self)
-            if save and (not replace):
-                print(f'Not saving (replace is set to False): {self.get_infostring()}')
-            return _ignore_data(data, self.ignore_out)
+            return self._doit()
 
     def copy(self):
         return deepcopy(self)

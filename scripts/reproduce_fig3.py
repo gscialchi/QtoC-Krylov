@@ -13,15 +13,19 @@ from plotters import plot_states_correspondence
 
 
 #### Setup Doers for data saving & retrieval
-doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR)
+DISABLE_DOER = False
+# ^ if True, bypasses Doer functionality altogether. Nothing is loaded or saved
 
-doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR)
+doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR)
+doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR,
+               disabled=DISABLE_DOER)
 
-doer_rho = Doer(coherent_ensemble, args={'f': gauss_2D})
+doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR, disabled=DISABLE_DOER)
 
-doer_u = Doer(u_harmonic)
+doer_rho = Doer(coherent_ensemble, args={'f': gauss_2D}, disabled=DISABLE_DOER)
+
+doer_u = Doer(u_harmonic, disabled=DISABLE_DOER)
 
 
 #### Calculation parameters
@@ -46,7 +50,7 @@ plim = qlim
 f = partial(gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
 map = partial(harmonic_map_inv, dt=dt) # inverse harmonic map
 
-hs = 1/np.asarray([2**5, 2**8]) # values of hbar to evaluate at
+hs = 1/np.asarray([2**5, 2**6]) # values of hbar to evaluate at
 fid = 1-1e-9 # fidelity of truncated quantum coherent state
 
 # integration limits that will be used to calculate the quantum initial state
