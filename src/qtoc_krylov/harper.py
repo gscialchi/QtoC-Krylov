@@ -30,7 +30,7 @@ def c_harper_inv(k, q_, p_):
 ### Quantum maps
 """
 Globally set the Floquet angles explicitly.
-For discussion, see ../test/understanding_floquet_angles.py
+For discussion, see /tests/floquet_angles.py
 """
 QBAR, PBAR = (0.5, 0)
 
