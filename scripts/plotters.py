@@ -4,15 +4,25 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from matplotlib import rc
-rc('text', usetex=True)
-rc('text.latex', preamble=r'\usepackage{physics}')
 
 from qtoc_krylov.evolve import evolve_map
 from qtoc_krylov.harmonic import husimi_operator, husimi_state
 from qtoc_krylov.harper import husimi_torus_operator, husimi_torus_state
 
 
+usetex = True
+usephysics = True
+
+###
+if not usetex:
+    usephysics = False
+if usetex:
+    from matplotlib import rc
+    rc('text', usetex=True)
+    if usephysics:
+        rc('text.latex', preamble=r'\usepackage{physics}')
+
+###
 def savefig(fig, savedir, saveformat, *args, **kwargs):
     """
     Create path if non existent.
@@ -267,8 +277,16 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
 
     ## get x-size of ylabel text
     text0 = axes[0, 0].set_ylabel(r'Classical', size=size)
-    axes[r_pure, 0].set_ylabel(r'$\ketbra{\alpha(q\,p)}$', size=12)
-    axes[r_ket, 0].set_ylabel(r'$\ket{\alpha(q\,p)}$', size=12)
+
+    if usephysics:
+        pure_label = r'$\ketbra{\alpha(q\,p)}$'
+        ket_label = r'$\ket{\alpha(q\,p)}$'
+    else:
+        pure_label = r'Pure'
+        ket_label = r'Ket'
+
+    axes[r_pure, 0].set_ylabel(pure_label, size=12)
+    axes[r_ket, 0].set_ylabel(ket_label, size=12)
 
     bbox0 = text0.get_window_extent()
     dx0 = (bbox0.x1 - bbox0.x0)/dpi
@@ -389,8 +407,18 @@ def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs, up_to=None,
     dif_label = 'Relative difference'
     ck_label = r'$C_{\mathcal{K}}(t)$'
 
-    axes[0].set_ylabel(ck_label + r' (Classical vs. $\ketbra{\alpha(q\,p)}$)', size=size)
-    axes[1].set_ylabel(ck_label + r' (Classical vs. $\ket{\alpha(q\,p)}$)', size=size)
+    if usephysics:
+        pure_label = r'$\ketbra{\alpha(q\,p)}$'
+        ket_label = r'$\ket{\alpha(q\,p)}$'
+    else:
+        pure_label = r'Pure'
+        ket_label = r'Ket'
+
+    axes[r_pure, 0].set_ylabel(pure_label, size=12)
+    axes[r_ket, 0].set_ylabel(ket_label, size=12)
+
+    axes[0].set_ylabel(ck_label + r' (Classical vs.'+pure_label+')', size=size)
+    axes[1].set_ylabel(ck_label + r' (Classical vs.'+ket_label+')', size=size)
     axes[1].set_xlabel(r'$t$', size=size)
 
     cmap = mpl.colormaps['tab20b']
