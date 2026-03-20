@@ -8,14 +8,26 @@ from qtoc_krylov.krylov import *
 from qtoc_krylov.misc import *
 from qtoc_krylov.utilities.paths import *
 from qtoc_krylov.utilities.doer import Doer
+from qtoc_krylov.utilities.store import store
 
 from plotters import plot_states_correspondence
 
 
-#### Setup Doers for data saving & retrieval
+####
 DISABLE_DOER = False
-# ^ if True, bypasses Doer functionality altogether. Nothing is loaded or saved
+# ^ if True, bypasses Doer functionality altogether. No calculation will be
+# loaded or saved
 
+DISABLE_STORE = False
+# ^ if True, disables store functionality. No operator will be loaded or saved.
+
+
+#### Wrap store on some costly operators
+if not DISABLE_STORE:
+    coherent_ensemble = store(path=STORE_DIR)(coherent_ensemble)
+
+
+#### Setup Doers for data saving & retrieval
 doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR, disabled=DISABLE_DOER)
 
 doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR,
@@ -50,7 +62,7 @@ plim = qlim
 f = partial(gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
 map = partial(harmonic_map_inv, dt=dt) # inverse harmonic map
 
-hs = 1/np.asarray([2**5, 2**6]) # values of hbar to evaluate at
+hs = 1/np.asarray([2**5, 2**8]) # values of hbar to evaluate at
 fid = 1-1e-9 # fidelity of truncated quantum coherent state
 
 # integration limits that will be used to calculate the quantum initial state

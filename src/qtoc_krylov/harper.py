@@ -35,7 +35,7 @@ For discussion, see /tests/floquet_angles.py
 QBAR, PBAR = (0.5, 0)
 
 
-@store(path=STORE_DIR)
+#  @store(path=STORE_DIR)
 def q_harper(k, N, qbar=QBAR, pbar=PBAR):
     """
     Unitary for the quantum Harper map. `qbar` and `pbar` define
@@ -139,7 +139,7 @@ def coherent_state_torus(q, p, N, qbar=QBAR):
     return ket.reshape((N, 1))
 
 
-@store(path=STORE_DIR)
+#  @store(path=STORE_DIR)
 def coherent_ensemble_torus(f, N, qbar=QBAR, args=()):
     """
     Density matrix for a classical ensemble of coherent states on the unit

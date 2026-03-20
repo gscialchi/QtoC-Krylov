@@ -169,7 +169,7 @@ def cutoffs_for_coherent_ensemble(f, qlims, plims, hbar=1):
     return cutoffs_min[0], cutoffs_max[1]
 
 
-@store(path=STORE_DIR)
+#  @store(path=STORE_DIR)
 def coherent_ensemble(f, qlims, plims, cutoffs, args=(), hbar=1):
     """
     Density matrix for a classical ensemble of coherent states

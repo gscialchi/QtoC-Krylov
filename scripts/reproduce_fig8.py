@@ -8,14 +8,28 @@ from qtoc_krylov.krylov import *
 from qtoc_krylov.misc import *
 from qtoc_krylov.utilities.paths import *
 from qtoc_krylov.utilities.doer import Doer
+from qtoc_krylov.utilities.store import store
 
 from plotters import plot_states_ket_pure_cl
 
 
-#### Setup Doers for data saving & retrieval
+####
 DISABLE_DOER = False
-# ^ if True, bypasses Doer functionality altogether. Nothing is loaded or saved
+# ^ if True, bypasses Doer functionality altogether. No calculation will be
+# loaded or saved
 
+DISABLE_STORE = False
+# ^ if True, disables store functionality. No operator will be loaded or saved.
+
+
+#### Wrap store on some costly operators
+if not DISABLE_STORE:
+    q_harper = store(path=STORE_DIR)(q_harper)
+
+    coherent_ensemble_torus = store(path=STORE_DIR)(coherent_ensemble_torus)
+
+
+#### Setup Doers for data saving & retrieval
 doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR, disabled=DISABLE_DOER)
 
 doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR,
