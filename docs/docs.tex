@@ -107,7 +107,7 @@ where $P_n(x)= \frac{1}{n!} x^n e^{-x}$ is a Poisson probability mass function w
 and $\varphi = \arctan(p/q)$ is the argument of the point $(q, p)$ in phase space.
 After changing into polar coordinates:
 $$
-\rho_{nm} = \iint drd\vphi\, f(r\cos(\vphi), r\sin(\vphi))
+\rho_{nm} = \iint drd\vphi\, r f(r\cos(\vphi), r\sin(\vphi))
 \sqrt{ P_n\left(\frac{r^2}{2\hbar}\right) P_m\left(\frac{r^2}{2\hbar}\right) } e^{i\vphi(n-m)}.
 $$
 Finally, letting $u = r/\sqrt{2\hbar}$ and expanding:
@@ -176,17 +176,17 @@ Inserting Eq.\eqref{eq:kn_rhot} in the right Krylov state in $\smel{\kr_n}{\PF}{
 and using that $\PF \sket{\rho_t} = \sket{\rho_{t+1}}$ we have
 $$
 \boxed{
-\smel{\kr_n}{\PF}{\kr_m} = \sum_{t=0}^n \atn{t}{n} \bnt{n}{t+1}
+\smel{\kr_n}{\PF}{\kr_m} = \sum_{t=0}^m \bnt{n}{t+1} \atn{t}{m}
 }.
 $$
 Now we need $\atn{t}{n}$.
-Using the orthogonality of the Krylov states $\sbraket{k_n}{k_m} = \delta_{nm}$ and Eqs.\eqref{eq:kn_rhot} and \eqref{eq:rhot_kn} it is easy to see that
+Using the orthogonality of the Krylov states $\sbraket{\kr_n}{\kr_m} = \delta_{nm}$ and Eqs.\eqref{eq:kn_rhot} and \eqref{eq:rhot_kn} it is easy to see that
 $$
 \sum_{t=0}^m \bnt{n}{t} \atn{t}{m} = \delta_{nm},
 $$
 which means that $\beta$ and $\alpha$ are recursively inverse matrices,
-i.e., let $\beta^{(n)}$ be the $n\times n$ matrix with elements $(\beta^{(n)})_{n t} = \bnt{n}{t}$ and $\alpha^{(n)}$ the $n\times n$ matrix with elements $(\alpha^{(n)})_{tm} = \atn{t}{m}$,
-then $\beta^{(n)} \alpha^{(n)} = \mathbb{I}_{n\times n}$.
+i.e., let $\beta^{(m)}$ be the $m\times m$ matrix with elements $(\beta^{(m)})_{n t} = \bnt{n}{t}$ and $\alpha^{(m)}$ the $m\times m$ matrix with elements $(\alpha^{(m)})_{tm} = \atn{t}{m}$,
+then $\beta^{(m)} \alpha^{(m)} = \mathbb{I}_{m\times m}$.
 That is to say, we can calculate $\atn{t}{n}$ simply by inverting the matrix $\beta$.
 
 % \clearpage
