@@ -19,7 +19,7 @@ doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR)
 
 doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR)
 
-doer_rho = Doer(coherent_ensemble_torus, args={'f': gauss_2D})
+doer_rho = Doer(coherent_ensemble_torus, args={'f': periodic_gauss_2D})
 
 doer_u = Doer(q_harper)
 
