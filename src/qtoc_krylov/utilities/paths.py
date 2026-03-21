@@ -11,5 +11,6 @@ def _find_root():
 
 ROOT_DIR = _find_root()
 STORE_DIR = ROOT_DIR + "/data/operators/"
-CALC_DIR = ROOT_DIR + "/data/calculations/"
+DOER_DIR = ROOT_DIR + "/data/calculations/"
 FIG_DIR = ROOT_DIR + '/figures/'
+CONFIG_DIR = ROOT_DIR + '/configs/'
