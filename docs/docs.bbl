@@ -17,6 +17,43 @@
 \endgroup
 
 \datalist[entry]{none/global//global/global}
+  \entry{scialchi2026quantumtoclassicalcorrespondencekrylovcomplexity}{misc}{}
+    \name{author}{3}{}{%
+      {{hash=SGF}{%
+         family={Scialchi},
+         familyi={S\bibinitperiod},
+         given={Gastón\bibnamedelima F.},
+         giveni={G\bibinitperiod\bibinitdelim F\bibinitperiod},
+      }}%
+      {{hash=RAJ}{%
+         family={Roncaglia},
+         familyi={R\bibinitperiod},
+         given={Augusto\bibnamedelima J.},
+         giveni={A\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=WDA}{%
+         family={Wisniacki},
+         familyi={W\bibinitperiod},
+         given={Diego\bibnamedelima A.},
+         giveni={D\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SGFRAJWDA1}
+    \strng{fullhash}{SGFRAJWDA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 2603.11034
+    \endverb
+    \field{title}{Quantum-to-classical correspondence in Krylov complexity}
+    \verb{url}
+    \verb https://arxiv.org/abs/2603.11034
+    \endverb
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{quant-ph}
+    \field{year}{2026}
+  \endentry
+
   \entry{PLeboeuf_1990}{article}{}
     \name{author}{2}{}{%
       {{hash=LP}{%
@@ -41,8 +78,7 @@
     \endverb
     \field{number}{10}
     \field{pages}{1765}
-    \field{title}{Chaos-revealing multiplicative representation of quantum
-  eigenstates}
+    \field{title}{Chaos-revealing multiplicative representation of quantum eigenstates}
     \verb{url}
     \verb https://dx.doi.org/10.1088/0305-4470/23/10/017
     \endverb
