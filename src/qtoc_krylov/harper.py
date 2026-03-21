@@ -60,12 +60,9 @@ def q_harper(k, N, qbar=QBAR, pbar=PBAR):
 ## Husimi distribution on the unit torus
 def jacobi_theta(q, p, N, qn):
     """
-    Approximated Jacobi Theta function by selecting a good cutoff
+    Approximated controlled Jacobi Theta function by selecting a good cutoff
     for the sum. It is accurate to within an atol of at least 1e-9/N
     for all q, p, qn in the range [0, 1].
-
-    Compared to the actual Jacobi Theta, this is equal to
-        \exp(-N \pi (q - qn)^2) * jacobi_theta(q, p, N, qn).
 
     See: /docs/docs.pdf Section 1.
     """
