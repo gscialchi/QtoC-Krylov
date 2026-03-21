@@ -51,7 +51,7 @@ doer_u = Doer(u_harmonic, disabled=DISABLE_DOER)
 
 
 #### Calculation parameters
-n_steps = configs['HO_figs_1_and_2_n_steps']
+n_steps = configs['HO_fig_1_and_2_n_steps']
 stop = n_steps # when to stop calculating Krylov
 
 q0 = configs['HO_q0']
@@ -72,7 +72,7 @@ plim = qlim
 f = partial(gauss_2D, x0=q0, y0=p0, s=s) # initial classical distribution
 map = partial(harmonic_map_inv, dt=dt) # inverse harmonic map
 
-hs = np.asarray(configs['HO_figs_1_and_2_hbars']) # values of hbar
+hs = np.asarray(configs['HO_fig_1_and_2_hbars']) # values of hbar
 fid = configs['HO_fid'] # fidelity of truncated quantum coherent state
 
 # integration limits that will be used to calculate the quantum initial state
