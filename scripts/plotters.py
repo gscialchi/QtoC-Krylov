@@ -75,7 +75,6 @@ def plot_sequences_correspondence(u_cl, us_qu, up_to=None,
     axes[0].plot(n, an[:up_to], c='k', linestyle='--', linewidth=linewidth)
     axes[1].plot(n, bn[:up_to], c='k', linestyle='--', linewidth=linewidth)
     axes[2].plot(n, cn[:up_to], c='k', linestyle='--', linewidth=linewidth)
-    #  axes[1].legend(frameon=False, ncols=3)
 
     axes[0].set_ylim(-1*(1+0.05), 1*(1+0.05))
     axes[1].set_ylim(0, 1*(1+0.01))
@@ -112,7 +111,6 @@ def plot_complexity_correspondence(ck_cl, cks_qu, up_to=None,
     axes[0].set_ylabel(ck_label, size=size)
     axes[1].set_ylabel(dif_label, size=size)
     axes[1].set_xlabel(r'$t$', size=size)
-    axes[0].legend(frameon=False)
 
     cmap = mpl.colormaps['tab20b']
 
@@ -126,8 +124,7 @@ def plot_complexity_correspondence(ck_cl, cks_qu, up_to=None,
         axes[1].axhline(y=np.mean(dif), linestyle='dashdot', color=cmap(3-i))
 
     # classical
-    axes[0].plot(ck_cl[:up_to], color='k', linestyle='--', linewidth=linewidth,
-                 label=r'Classical')
+    axes[0].plot(ck_cl[:up_to], color='k', linestyle='--', linewidth=linewidth)
 
     fig.tight_layout()
     if save:
