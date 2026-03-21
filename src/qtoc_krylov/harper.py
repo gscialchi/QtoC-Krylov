@@ -44,6 +44,7 @@ def q_harper(k, N, qbar=QBAR, pbar=PBAR):
     """
     qn = np.arange(0, N) + qbar # n + qbar
     pn = np.arange(0, N) + pbar # m + pbar
+    # NOTE: usually qn = (n+qbar)/N but here I use a different definition
 
     qq, pp = np.meshgrid(qn, pn)
 
