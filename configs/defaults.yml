@@ -31,6 +31,7 @@ HO_fig_1_and_2_hbars: [0.0625, 0.03125, 0.015625, 0.0078125] # hbars for figs. 1
 # Parameters specific to fig. 3
 HO_fig_3_n_steps: 60 # number of time-steps for evolution
 HO_fig_3_hbars: [0.03125, 0.00390625] # hbars for fig. 3.
+HM_fig_3_states: [0, 1, 2, 3, 15, 35, 55] # which states to show in plot
 
 # ---- General calculation parameters for the Harper map ----
 HM_k: 0.05 # map parameter
@@ -48,3 +49,13 @@ HM_fig_4_and_5_N_qus: [32, 64, 128, 256] # values of quantum Hilbert space dimen
 # Parameters specific to fig. 6
 HM_fig_6_n_steps: 60
 HM_fig_6_N_qus: [64, 2048]
+HM_fig_6_states: [0, 1, 2, 3, 15, 35, 55]
+
+# Parameters specific to fig. 7
+HM_fig_7_n_steps: 200
+HM_fig_7_N_qus: [64, 128, 256, 512]
+
+# Parameters specific to fig. 8
+HM_fig_8_n_steps: 60
+HM_fig_8_N_qu: 256
+HM_fig_8_states: [0, 17, 55]

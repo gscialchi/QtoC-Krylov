@@ -1,4 +1,5 @@
 from functools import partial
+import argparse
 
 import numpy as np
 
@@ -9,18 +10,21 @@ from qtoc_krylov.misc import *
 from qtoc_krylov.utilities.paths import *
 from qtoc_krylov.utilities.doer import Doer
 from qtoc_krylov.utilities.store import store
+from qtoc_krylov.utilities.config import get_config
 
 from plotters import plot_complexity_ket_pure_cl_limit
 
 
+# setup parser for script
+parser = argparse.ArgumentParser()
+parser.add_argument('-c', '--config', default=CONFIG_DIR+'/defaults.yml')
+args = parser.parse_args()
+
+configs = get_config(args.config)
+
 ####
-DISABLE_DOER = False
-# ^ if True, bypasses Doer functionality altogether. No calculation will be
-# loaded or saved
-
-DISABLE_STORE = False
-# ^ if True, disables store functionality. No operator will be loaded or saved.
-
+DISABLE_DOER = configs['DISABLE_DOER']
+DISABLE_STORE = configs['DISABLE_STORE']
 
 #### Wrap store on some costly operators
 if not DISABLE_STORE:
@@ -30,21 +34,21 @@ if not DISABLE_STORE:
 
 
 #### Setup Doers for data saving & retrieval
-doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR, disabled=DISABLE_DOER)
+doer_evolve_f = Doer(evolve_distribution, path=DOER_DIR, disabled=DISABLE_DOER)
 
-doer_evolve_pure = Doer(evolve_operator, path=CALC_DIR, disabled=DISABLE_DOER)
+doer_evolve_pure = Doer(evolve_operator, path=DOER_DIR, disabled=DISABLE_DOER)
 
-doer_evolve_ket = Doer(evolve_ket, path=CALC_DIR, disabled=DISABLE_DOER)
+doer_evolve_ket = Doer(evolve_ket, path=DOER_DIR, disabled=DISABLE_DOER)
 
-doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR,
+doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=DOER_DIR,
                disabled=DISABLE_DOER)
 
 doer_wave = Doer(krylov_wavefunction_cl, ignore_args=['ft', 'fk'],
-                 path=CALC_DIR, disabled=DISABLE_DOER)
+                 path=DOER_DIR, disabled=DISABLE_DOER)
 
-doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR, disabled=DISABLE_DOER)
+doer_arnoldi = Doer(arnoldi_FO_operator, path=DOER_DIR, disabled=DISABLE_DOER)
 
-doer_lanczos = Doer(lanczos_FO_ket, path=CALC_DIR, disabled=DISABLE_DOER)
+doer_lanczos = Doer(lanczos_FO_ket, path=DOER_DIR, disabled=DISABLE_DOER)
 
 doer_ket = Doer(coherent_state_torus, disabled=DISABLE_DOER)
 
@@ -54,19 +58,20 @@ doer_u = Doer(q_harper, disabled=DISABLE_DOER)
 
 
 #### Calculation parameters
-n_steps = 200 # number of time-steps
+n_steps = configs['HM_fig_7_n_steps']
 stop = n_steps # when to stop calculating Krylov
 
-k = 0.05 # map parameter
-q0, p0 = 0.4, 0.5 # center of initial state in phase space
+k = configs['HM_k']
+q0 = configs['HM_q0']
+p0 = configs['HM_p0']
 
 # number of points to evaluate classical distribution
-N_res = 300 # make sure is enough to resolve packet!
+N_res = configs['HM_N_res'] # make sure is enough to resolve packet!
 
 # define limits of phase space where the distribution is evaluated
 qlim, plim = [0, 1], [0, 1] # the whole unit torus
 
-N_qus = np.asarray([2**6, 2**7, 2**8, 2**9]) # values of quantum dimension
+N_qus = np.asarray(configs['HM_fig_7_N_qus']) # values of quantum dimension
 
 
 #### Calculate
@@ -131,5 +136,7 @@ for i, N_qu in enumerate(N_qus):
 figname = 'Figure_7'
 plot_complexity_ket_pure_cl_limit(cks_cl, cks_ket, cks_pure, N_qus, up_to=200,
                                   plot_dif=True, inset_pos=[0.1125, 0.475, 0.5, 0.5],
-                                  save=True,
+                                  save=configs['SAVE_FIGURES'],
+                                  usetex=configs['FIGURES_USETEX'],
+                                  usephysics=configs['FIGURES_USEPHYSICS'],
                                   savedir=FIG_DIR + figname)

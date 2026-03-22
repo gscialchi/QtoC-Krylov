@@ -1,4 +1,5 @@
 from functools import partial
+import argparse
 
 import numpy as np
 
@@ -9,18 +10,21 @@ from qtoc_krylov.misc import *
 from qtoc_krylov.utilities.paths import *
 from qtoc_krylov.utilities.doer import Doer
 from qtoc_krylov.utilities.store import store
+from qtoc_krylov.utilities.config import get_config
 
 from plotters import plot_states_ket_pure_cl
 
 
+# setup parser for script
+parser = argparse.ArgumentParser()
+parser.add_argument('-c', '--config', default=CONFIG_DIR+'/defaults.yml')
+args = parser.parse_args()
+
+configs = get_config(args.config)
+
 ####
-DISABLE_DOER = False
-# ^ if True, bypasses Doer functionality altogether. No calculation will be
-# loaded or saved
-
-DISABLE_STORE = False
-# ^ if True, disables store functionality. No operator will be loaded or saved.
-
+DISABLE_DOER = configs['DISABLE_DOER']
+DISABLE_STORE = configs['DISABLE_STORE']
 
 #### Wrap store on some costly operators
 if not DISABLE_STORE:
@@ -30,14 +34,14 @@ if not DISABLE_STORE:
 
 
 #### Setup Doers for data saving & retrieval
-doer_evolve_f = Doer(evolve_distribution, path=CALC_DIR, disabled=DISABLE_DOER)
+doer_evolve_f = Doer(evolve_distribution, path=DOER_DIR, disabled=DISABLE_DOER)
 
-doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=CALC_DIR,
+doer_gs = Doer(gram_schmidt_ft, ignore_args='ft', path=DOER_DIR,
                disabled=DISABLE_DOER)
 
-doer_arnoldi = Doer(arnoldi_FO_operator, path=CALC_DIR, disabled=DISABLE_DOER)
+doer_arnoldi = Doer(arnoldi_FO_operator, path=DOER_DIR, disabled=DISABLE_DOER)
 
-doer_lanczos = Doer(lanczos_FO_ket, path=CALC_DIR, disabled=DISABLE_DOER)
+doer_lanczos = Doer(lanczos_FO_ket, path=DOER_DIR, disabled=DISABLE_DOER)
 
 doer_ket = Doer(coherent_state_torus, disabled=DISABLE_DOER)
 
@@ -47,19 +51,20 @@ doer_u = Doer(q_harper, disabled=DISABLE_DOER)
 
 
 #### Calculation parameters
-n_steps = 60 # number of time-steps
+n_steps = configs['HM_fig_8_n_steps']
 stop = n_steps # when to stop calculating Krylov
 
-k = 0.05 # map parameter
-q0, p0 = 0.4, 0.5 # center of initial state in phase space
+k = configs['HM_k']
+q0 = configs['HM_q0']
+p0 = configs['HM_p0']
 
 # number of points to evaluate classical distribution
-N_res = 300 # make sure is enough to resolve packet!
+N_res = configs['HM_N_res'] # make sure is enough to resolve packet!
 
 # define limits of phase space where the distribution is evaluated
 qlim, plim = [0, 1], [0, 1] # the whole unit torus
 
-N_qu = 2**8 # quantum dimension
+N_qu = configs['HM_fig_8_N_qu'] # quantum dimension
 
 
 #### Calculate
@@ -98,7 +103,7 @@ kry_cl = doer_gs.doit() # get Krylov via Gram-Schmidt
 
 
 #### Plot
-which = [0, 17, 55] # which states to show
+which = configs['HM_fig_8_states'] # which states to show
 
 # points for drawing classical trayectories
 point_map = partial(c_harper, k)
@@ -113,6 +118,8 @@ plot_states_ket_pure_cl(kry_cl, kry_ket, kry_pure,
                         points=points, map=point_map,
                         norm_from_k0=True,
                         which=which,
-                        save=True,
+                        save=configs['SAVE_FIGURES'],
+                        usetex=configs['FIGURES_USETEX'],
+                        usephysics=configs['FIGURES_USEPHYSICS'],
                         savedir=FIG_DIR + figname,
                         saveformat='png') # pdf can be large

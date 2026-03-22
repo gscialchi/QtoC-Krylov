@@ -114,7 +114,7 @@ for i, h in enumerate(hs):
 
 
 #### Plot
-which = [0, 1, 2, 3, 15, 35, 55] # which states to show
+which = configs['HM_fig_3_states'] # which states to show
 
 # points for drawing classical trayectories
 point_map = partial(harmonic_map, dt=dt)

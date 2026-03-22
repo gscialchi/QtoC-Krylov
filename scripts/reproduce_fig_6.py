@@ -101,7 +101,7 @@ for i, N_qu in enumerate(N_qus):
 
 
 #### Plot
-which = [0, 1, 2, 3, 15, 35, 55] # which states to show
+which = configs['HM_fig_6_states'] # which states to show
 
 # points for drawing classical trayectories
 point_map = partial(c_harper, k)

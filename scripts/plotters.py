@@ -424,9 +424,6 @@ def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs, up_to=None,
         pure_label = r'Pure'
         ket_label = r'Ket'
 
-    axes[r_pure, 0].set_ylabel(pure_label, size=12)
-    axes[r_ket, 0].set_ylabel(ket_label, size=12)
-
     axes[0].set_ylabel(ck_label + r' (Classical vs.'+pure_label+')', size=size)
     axes[1].set_ylabel(ck_label + r' (Classical vs.'+ket_label+')', size=size)
     axes[1].set_xlabel(r'$t$', size=size)
