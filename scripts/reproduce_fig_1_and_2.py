@@ -139,9 +139,11 @@ for i, h in enumerate(hs):
 figname = 'Figure_1'
 plot_sequences_correspondence(u_cl, us_qu, up_to=100,
                               save=configs['SAVE_FIGURES'],
+                              usetex=configs['FIGURES_USETEX'],
                               savedir=FIG_DIR + figname)
 
 figname = 'Figure_2'
 plot_complexity_correspondence(ck_cl, cks_qu, up_to=200,
                                save=configs['SAVE_FIGURES'],
+                               usetex=configs['FIGURES_USETEX'],
                                savedir=FIG_DIR + figname)

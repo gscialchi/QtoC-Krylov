@@ -131,5 +131,6 @@ plot_states_correspondence(kry_cl, krys_qu,
                            which=which, cutoffs=cutoffs_list,
                            save=configs['SAVE_FIGURES'],
                            #  show=False,
+                           usetex=configs['FIGURES_USETEX'],
                            savedir=FIG_DIR + figname,
                            saveformat='png') # pdf can be large

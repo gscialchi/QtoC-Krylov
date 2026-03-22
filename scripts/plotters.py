@@ -10,19 +10,17 @@ from qtoc_krylov.harmonic import husimi_operator, husimi_state
 from qtoc_krylov.harper import husimi_torus_operator, husimi_torus_state
 
 
-usetex = True
-usephysics = True
-
 ###
-if not usetex:
-    usephysics = False
-if usetex:
-    from matplotlib import rc
-    rc('text', usetex=True)
-    if usephysics:
-        rc('text.latex', preamble=r'\usepackage{physics}')
+def latex_config(usetex=True, usephysics=True):
+    if not usetex:
+        usephysics = False
+    if usetex:
+        from matplotlib import rc
+        rc('text', usetex=True)
+        if usephysics:
+            rc('text.latex', preamble=r'\usepackage{physics}')
 
-###
+
 def savefig(fig, savedir, saveformat, *args, **kwargs):
     """
     Create path if non existent.
@@ -39,7 +37,10 @@ def savefig(fig, savedir, saveformat, *args, **kwargs):
 def plot_sequences_correspondence(u_cl, us_qu, up_to=None,
                                   figsize=(5, 4), size=14, labelsize=11,
                                   linewidth=1.5, nxticks=4,
+                                  usetex=True,
                                   save=False, savedir=None, saveformat='pdf'):
+    latex_config(usetex, False)
+
     fig, axes = plt.subplots(3, 1, figsize=figsize, sharex=True)
     fig.subplots_adjust(hspace=0.1, wspace=0)
 
@@ -89,8 +90,11 @@ def plot_sequences_correspondence(u_cl, us_qu, up_to=None,
 def plot_complexity_correspondence(ck_cl, cks_qu, up_to=None,
                                    figsize=(5, 6), size=14, labelsize=11,
                                    linewidth=1.5, nxticks=5, nyticks=4, nlogyticks=3,
+                                   usetex=True,
                                    save=False, savedir=None, saveformat='pdf',
                                    show=True):
+    latex_config(usetex, False)
+
     fig, axes = plt.subplots(2, 1, figsize=figsize, sharex=True)
     axes = axes.flatten()
     fig.subplots_adjust(hspace=0.05)
@@ -137,8 +141,11 @@ def plot_states_correspondence(cl, qus, qlim, plim, N, hbars=None, Nqus=None,
                                cutoffs=None, which=None, map=None,
                                points=None, norm_from_k0=False,
                                size=14, labelsize=11,
+                               usetex=True,
                                save=False, savedir=None, saveformat='pdf',
                                show=True):
+    latex_config(usetex, False)
+
     q = np.linspace(*qlim, N)
     p = np.linspace(*plim, N)
 
@@ -255,8 +262,11 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
                             cutoffs=None, which=None, map=None,
                             points=None, norm_from_k0=False,
                             size=14, labelsize=11,
+                            usetex=True, usephysics=True,
                             save=False, savedir=None, saveformat='pdf',
                             show=True):
+    latex_config(usetex, usephysics)
+
     q = np.linspace(*qlim, N)
     p = np.linspace(*plim, N)
 
@@ -388,8 +398,11 @@ def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs, up_to=None,
                                       plot_dif=False, inset_pos=None,
                                       figsize=(5, 6), size=14, labelsize=11,
                                       linewidth=1.5, nxticks=5, nyticks=4, nlogyticks=3,
+                                      usetex=True, usephysics=True,
                                       save=False, savedir=None, saveformat='pdf',
                                       show=True):
+    latex_config(usetex, usephysics)
+
     fig, axes = plt.subplots(2, 1, figsize=figsize, sharex=True)
     axes = axes.flatten()
     fig.subplots_adjust(hspace=0.05)
