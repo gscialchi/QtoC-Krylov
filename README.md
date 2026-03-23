@@ -1,9 +1,15 @@
 # Quantum-to-classical correspondence in Krylov complexity
-Author: Gastón F. Scialchi.
+**Author**: Gastón F. Scialchi.
+* Universidad de Buenos Aires, Facultad de Ciencias Exactas y Naturales, Departamento de Fı́sica.
+* CONICET - Universidad de Buenos Aires, Instituto de Fı́sica de Buenos Aires (IFIBA).
 
 This repository contains the numerical computations whose results appear in:
 
 Gastón F. Scialchi, Augusto J. Roncaglia, and Diego A. Wisniacki. Quantum-to-classical correspondence in Krylov complexity. 2026. arXiv: 2603.11034 [quant-ph]. url: https://arxiv.org/abs/2603.11034.
+
+This code is available under MIT license (see LICENSE.md), you can use it freely.
+If you do, please cite both the code and the associated paper.
+
 
 ## Installation
 In order to run the scripts contained in this repository you will first need to create a python3 environment with the required dependencies.
@@ -13,15 +19,49 @@ You can do that by following the next steps:
 * Create a virtual environment: ```python3 -m venv .venv```
 * Activate the virtual environment: ```source .venv/bin/activate```
 * Install the requirements: ```python3 -m pip install -r requirements.txt```
+
 Now everything is ready to run the code.
 
 ## Reproducing figures
 Make sure the virtual environment is active.
+The following paths are relative to the repository's root directory.
 
 In the scripts folders you'll find scripts that reproduce each figure in the manuscript.
-You can run these scripts with ```python3 path/to/script/reproduce_fig_N.py```.
-Each script can take an optional configuration file to modify the parameters for the calculations:
-```python3 path/to/script/reproduce_fig_N.py --config=path/to/config.yml```.
+You can run these scripts with
+
+```python3 scripts/reproduce_fig_N.py```
+
+
+You can run all scripts at once with
+
+```python3 scripts/reproduce_all.py```
+
+
+## Configuration file
+The scripts can take an optional configuration file to modify the parameters for the calculations:
+
+```python3 scripts/reproduce_fig_N.py --config=path/to/config.yml```
+
+```python3 scripts/reproduce_all.py --config=path/to/config.yml```
+
 If no configuration file is passed, configs/defaults.yml will be used, which contains the values used for the figures present in the final version of the manuscript.
 
 By default, a data and figures folder will be created in the repository's root directory.
+This can be changed in the configuration file.
+
+## About the `store` and `doer` modules
+Some computations can take a while, specially when array dimensions get somewhat large.
+This is why I use two utilities that automatically check whether a given computation has already been made.
+If it hasn't, then it computes and stores the data.
+If it has, then it simply loads it.
+The basic idea with both is to keep track of the methods and parameters involved and use that information to unically identify the data.
+
+The `store` module is meant to be used on 'static' things that are used repeatedly, such as the operators that define the system's Hamiltonian, propagator, initial state, etc.
+It provides a decorator that wraps the method used to compute said operators.
+
+The `doer` module is meant to be used on 'calculation pipelines'.
+It provides the `Doer` class which is to be used to define the 'pipeline elements'.
+This is better explained by seeing it in action.
+
+The results of the calculations do not depend on the use of these modules,
+and they can be bypassed/deactivated completely by setting `DISABLE_STORE: True` and `DISABLE_DOER: True` in the configuration file.
