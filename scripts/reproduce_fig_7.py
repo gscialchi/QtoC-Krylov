@@ -150,4 +150,5 @@ plot_complexity_ket_pure_cl_limit(cks_cl, cks_ket, cks_pure, N_qus, up_to=200,
                                   save=configs['SAVE_FIGURES'],
                                   usetex=configs['FIGURES_USETEX'],
                                   usephysics=configs['FIGURES_USEPHYSICS'],
-                                  savedir=FIG_DIR + figname)
+                                  savedir=FIG_DIR + figname,
+                                  show=configs['SHOW_FIGURES'])

@@ -38,7 +38,8 @@ def plot_sequences_correspondence(u_cl, us_qu, up_to=None,
                                   figsize=(5, 4), size=14, labelsize=11,
                                   linewidth=1.5, nxticks=4,
                                   usetex=True,
-                                  save=False, savedir=None, saveformat='pdf'):
+                                  save=False, savedir=None, saveformat='pdf',
+                                  show=True):
     latex_config(usetex, False)
 
     fig, axes = plt.subplots(3, 1, figsize=figsize, sharex=True)
@@ -84,7 +85,10 @@ def plot_sequences_correspondence(u_cl, us_qu, up_to=None,
     #  fig.tight_layout()
     if save:
         savefig(fig, savedir, saveformat, bbox_inches='tight', dpi=fig.dpi)
-    plt.show()
+    if show:
+        plt.show()
+    else:
+        plt.close(fig)
 
 
 def plot_complexity_correspondence(ck_cl, cks_qu, up_to=None,
@@ -135,6 +139,8 @@ def plot_complexity_correspondence(ck_cl, cks_qu, up_to=None,
         savefig(fig, savedir, saveformat, bbox_inches='tight', dpi=fig.dpi)
     if show:
         plt.show()
+    else:
+        plt.close(fig)
 
 
 def plot_states_correspondence(cl, qus, qlim, plim, N, hbars=None, Nqus=None,
@@ -256,6 +262,8 @@ def plot_states_correspondence(cl, qus, qlim, plim, N, hbars=None, Nqus=None,
         savefig(fig, savedir, saveformat, bbox_inches='tight', dpi=fig.dpi)
     if show:
         plt.show()
+    else:
+        plt.close(fig)
 
 
 def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
@@ -392,6 +400,8 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
         savefig(fig, savedir, saveformat, bbox_inches='tight', dpi=fig.dpi)
     if show:
         plt.show()
+    else:
+        plt.close(fig)
 
 
 def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs, up_to=None,
@@ -461,3 +471,5 @@ def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs, up_to=None,
         savefig(fig, savedir, saveformat, bbox_inches='tight', dpi=fig.dpi)
     if show:
         plt.show()
+    else:
+        plt.close(fig)

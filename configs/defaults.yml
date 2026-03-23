@@ -7,10 +7,11 @@ DOER_DIR: 'default'
 DISABLE_STORE: False # if True, disables store functionality. No operator will be loaded or saved
 STORE_DIR: 'default'
 
+SHOW_FIGURES: False # show figures at runtime
 SAVE_FIGURES: True
 FIG_DIR: 'default' # where to store figures
-FIGURES_USETEX: True # whether LaTeX will be used to render fonts in figures
-FIGURES_USEPHYSICS: True # whether the package physics will be used to render maths in figures
+FIGURES_USETEX: False # whether LaTeX will be used to render fonts in figures. See: https://matplotlib.org/stable/users/explain/text/usetex.html
+FIGURES_USEPHYSICS: False # whether the package physics will be used to render maths in figures
 
 # ---- General calculation parameters for the harmonic oscillator ----
 HO_q0: 1 # position of initial state in phase space

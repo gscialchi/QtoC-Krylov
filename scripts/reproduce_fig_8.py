@@ -133,4 +133,5 @@ plot_states_ket_pure_cl(kry_cl, kry_ket, kry_pure,
                         usetex=configs['FIGURES_USETEX'],
                         usephysics=configs['FIGURES_USEPHYSICS'],
                         savedir=FIG_DIR + figname,
-                        saveformat='png') # pdf can be large
+                        saveformat='png', # pdf can be large
+                        show=configs['SHOW_FIGURES'])

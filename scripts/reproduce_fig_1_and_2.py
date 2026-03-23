@@ -151,10 +151,12 @@ figname = 'Figure_1'
 plot_sequences_correspondence(u_cl, us_qu, up_to=100,
                               save=configs['SAVE_FIGURES'],
                               usetex=configs['FIGURES_USETEX'],
-                              savedir=FIG_DIR + figname)
+                              savedir=FIG_DIR + figname,
+                              show=configs['SHOW_FIGURES'])
 
 figname = 'Figure_2'
 plot_complexity_correspondence(ck_cl, cks_qu, up_to=200,
                                save=configs['SAVE_FIGURES'],
                                usetex=configs['FIGURES_USETEX'],
-                               savedir=FIG_DIR + figname)
+                               savedir=FIG_DIR + figname,
+                               show=configs['SHOW_FIGURES'])
