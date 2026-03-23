@@ -65,7 +65,11 @@ This is better explained by seeing it in action.
 
 The results of the calculations do not depend on the use of these modules,
 and they can be bypassed/deactivated completely by setting
+
 ```DISABLE_STORE: True```
+
 and
+
 ```DISABLE_DOER: True```
+
 in the configuration file.
