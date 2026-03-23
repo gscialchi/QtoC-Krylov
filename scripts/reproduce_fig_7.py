@@ -17,7 +17,7 @@ from plotters import plot_complexity_ket_pure_cl_limit
 
 # setup parser for script
 parser = argparse.ArgumentParser()
-parser.add_argument('-c', '--config', default=paths.CONFIG_DIR+'/defaults.yml')
+parser.add_argument('-c', '--config', default=paths.CONFIG_DIR+'defaults.yml')
 args = parser.parse_args()
 
 configs = get_config(args.config)
