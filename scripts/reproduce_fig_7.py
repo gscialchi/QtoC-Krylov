@@ -7,7 +7,7 @@ from qtoc_krylov.harper import *
 from qtoc_krylov.evolve import *
 from qtoc_krylov.krylov import *
 from qtoc_krylov.misc import *
-from qtoc_krylov.utilities.paths import *
+import qtoc_krylov.utilities.paths as paths
 from qtoc_krylov.utilities.doer import Doer
 from qtoc_krylov.utilities.store import store
 from qtoc_krylov.utilities.config import get_config
@@ -24,7 +24,14 @@ configs = get_config(args.config)
 
 ####
 DISABLE_DOER = configs['DISABLE_DOER']
+DOER_DIR = configs['DOER_DIR']
+if DOER_DIR == 'default':
+    DOER_DIR = paths.DOER_DIR
+
 DISABLE_STORE = configs['DISABLE_STORE']
+STORE_DIR = configs['STORE_DIR']
+if STORE_DIR == 'default':
+    STORE_DIR = paths.STORE_DIR
 
 #### Wrap store on some costly operators
 if not DISABLE_STORE:
@@ -133,6 +140,10 @@ for i, N_qu in enumerate(N_qus):
 
 
 #### Plot
+FIG_DIR = configs['FIG_DIR']
+if FIG_DIR == 'default':
+    FIG_DIR = paths.FIG_DIR
+
 figname = 'Figure_7'
 plot_complexity_ket_pure_cl_limit(cks_cl, cks_ket, cks_pure, N_qus, up_to=200,
                                   plot_dif=True, inset_pos=[0.1125, 0.475, 0.5, 0.5],

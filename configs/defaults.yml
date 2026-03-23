@@ -2,11 +2,13 @@
 # figures present in the final version of the paper
 
 DISABLE_DOER: False # if True, bypasses Doer functionality altogether. No calculation will be loaded or saved
+DOER_DIR: 'default'
+
 DISABLE_STORE: False # if True, disables store functionality. No operator will be loaded or saved
+STORE_DIR: 'default'
 
 SAVE_FIGURES: True
 FIG_DIR: 'default' # where to store figures
-
 FIGURES_USETEX: True # whether LaTeX will be used to render fonts in figures
 FIGURES_USEPHYSICS: True # whether the package physics will be used to render maths in figures
 
