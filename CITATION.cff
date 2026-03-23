@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Scialchi"
+  given-names: "Gastón F."
+  orcid: "https://orcid.org/0009-0004-7247-1503"
+title: "Numerical code for `Quantum-to-classical correspondence in Krylov complexity"
+version: 0.1.0
+date-released: 2026-03-23
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Scialchi"
+    given-names: "Gastón F."
+    orcid: "https://orcid.org/0009-0004-7247-1503"
+  - family-names: "Roncaglia"
+    given-names: "Augusto J."
+    orcid: "https://orcid.org/0000-0001-9936-1161"
+  - family-names: "Wisniacki"
+    given-names: "Diego A."
+    orcid: "https://orcid.org/0000-0001-5733-4835"
+  journal: "arXiv"
+  year: 2026
+  eprint: 2603.11034
