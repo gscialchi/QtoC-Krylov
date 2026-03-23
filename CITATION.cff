@@ -4,7 +4,7 @@ authors:
 - family-names: "Scialchi"
   given-names: "Gastón F."
   orcid: "https://orcid.org/0009-0004-7247-1503"
-title: "Numerical code for `Quantum-to-classical correspondence in Krylov complexity"
+title: "Numerical code for `Quantum-to-classical correspondence in Krylov complexity'"
 version: 0.1.0
 date-released: 2026-03-23
 preferred-citation:
@@ -19,6 +19,7 @@ preferred-citation:
   - family-names: "Wisniacki"
     given-names: "Diego A."
     orcid: "https://orcid.org/0000-0001-5733-4835"
+  title: "Quantum-to-classical correspondence in Krylov complexity"
   journal: "arXiv"
-  year: 2026
-  url: https://arxiv.org/abs/2603.11034
+  date-released: 2026-03-11
+  url: "https://arxiv.org/abs/2603.11034"
