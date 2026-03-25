@@ -8,8 +8,7 @@ This repository contains the numerical computations whose results appear in:
 Gastón F. Scialchi, Augusto J. Roncaglia, and Diego A. Wisniacki. Quantum-to-classical correspondence in Krylov complexity. 2026. arXiv: 2603.11034 [quant-ph]. url: https://arxiv.org/abs/2603.11034.
 
 This code is available under MIT license (see [LICENSE.md](./LICENSE.md)), you can use it freely.
-If you do, please cite both the code and the associated paper.
-
+If you do, please see the Citation section below.
 
 ## Installation
 In order to run the scripts contained in this repository you will first need to create a python3 environment with the required dependencies.
@@ -73,3 +72,20 @@ and
 ```DISABLE_DOER: True```
 
 in the configuration file.
+
+## Citation
+If you use the code in this repository in your research,
+please cite this repository: https://doi.org/10.5281/zenodo.19226136
+
+If you use the results of the paper, please cite:
+```
+@article{scialchi2026quantumtoclassicalcorrespondencekrylovcomplexity,
+      title={Quantum-to-classical correspondence in Krylov complexity},
+      author={Gastón F. Scialchi and Augusto J. Roncaglia and Diego A. Wisniacki},
+      year={2026},
+      eprint={2603.11034},
+      archivePrefix={arXiv},
+      primaryClass={quant-ph},
+      url={https://arxiv.org/abs/2603.11034},
+}
+```

@@ -7,6 +7,7 @@ authors:
 title: "Numerical code for `Quantum-to-classical correspondence in Krylov complexity'"
 version: 0.1.0
 date-released: 2026-03-23
+doi: https://doi.org/10.5281/zenodo.19226136
 preferred-citation:
   type: article
   authors:
