@@ -35,6 +35,11 @@ You can run all scripts at once with
 
 ```python3 scripts/reproduce_all.py```
 
+Note that these calculations can take a while.
+If you wish to get the figures quickly
+you can download the precomputed data that appears in the paper,
+see the Data section below.
+
 
 ## Configuration file
 The scripts can take an optional configuration file to modify the parameters for the calculations:
@@ -71,11 +76,42 @@ and
 
 ```DISABLE_DOER: True```
 
-in the configuration file.
+in the configuration file,
+which will result in the whole calculation being done from scratch.
+
+## Data
+The full dataset that is produced by this code with the default configuration,
+and that appears in the figures present in the final version of the manuscript,
+is available on Zenodo:
+
+**TODO**
+
+Here are the steps to use it:
+1. Download the dataset from the link above
+2. Extract it in the repository's root directory: ```tar -xzvf data.tar.gz .```
+3. As a result the whole directory structure should look like this:
+```
+QtoC-Krylov/
+    configs/
+    data/
+        calculations/ # this is where 'doer' puts data
+        operators/ # this is where 'store' puts data
+    docs/
+    scripts/
+    src/
+    tests
+```
+4. Alternatively, you can extract it elsewhere and edit the `DOER_DIR` and `STORE_DIR` variables in the configuration file.
+
+You can now run the code as described above.
+
+**Note:** the full dataset is 9 GB.
 
 ## Citation
-If you use the code in this repository in your research,
-please cite this repository: https://doi.org/10.5281/zenodo.19226136
+If you use the code from this repository in your research,
+please cite:
+
+https://doi.org/10.5281/zenodo.19226136
 
 If you use the results of the paper, please cite:
 ```
