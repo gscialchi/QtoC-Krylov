@@ -4,3 +4,7 @@
 *data*
 *figures*
 *nohup*
+docs/*tex
+docs/*bbl
+docs/*bib
+docs/*gz
