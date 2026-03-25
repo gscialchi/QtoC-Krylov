@@ -14,8 +14,8 @@ If you do, please cite both the code and the associated paper.
 ## Installation
 In order to run the scripts contained in this repository you will first need to create a python3 environment with the required dependencies.
 You can do that by following the next steps:
-* Clone the repository: ```git clone https://github.com/Sccial/quantum-to-classical-krylov-complexity.git ```
-* Enter the directory: ```cd quantum-to-classical-krylov-complexity```
+* Clone the repository: ```git clone https://github.com/gscialchi/QtoC-Krylov.git ```
+* Enter the directory: ```cd QtoC-Krylov```
 * Create a virtual environment: ```python3 -m venv .venv```
 * Activate the virtual environment: ```source .venv/bin/activate```
 * Install the requirements: ```python3 -m pip install -r requirements.txt```
