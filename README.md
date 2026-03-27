@@ -35,11 +35,48 @@ You can run all scripts at once with
 
 ```python3 scripts/reproduce_all.py```
 
+By default, a data and figures folder will be created in the repository's root directory.
+This can be changed in the configuration file
+(see [Configuration file](#configuration-file)).
+
 Note that these calculations can take a while.
 If you wish to get the figures quickly
 you can download the precomputed data that appears in the paper,
-see the Data section below.
+see the [Data](#data) section below.
 
+## Data
+The code will automatically check whether
+the computations have already been made and the outputs stored
+in order to load it
+(see [About the `store` and `doer` modules](#about-the-store-and-doer-modules)).
+
+The full dataset that is produced by this code with the default configuration
+(see [Configuration file](#configuration-file)),
+and that appears in the figures present in the final version of the manuscript,
+is available on Zenodo:
+
+https://doi.org/10.5281/zenodo.19226991
+
+Here are the steps to use it:
+1. Download the dataset from the link above
+2. Extract it in the repository's root directory: ```tar -xzvf data.tar.gz .```
+3. As a result the whole directory structure should look like this:
+```
+QtoC-Krylov/
+    configs/
+    data/
+        calculations/ # this is where 'doer' puts data
+        operators/ # this is where 'store' puts data
+    docs/
+    scripts/
+    src/
+    tests
+```
+4. Alternatively, you can extract it elsewhere and edit the `DOER_DIR` and `STORE_DIR` variables in the configuration file.
+
+You can now run the code as described above.
+
+**Note:** the full dataset is 9 GB.
 
 ## Configuration file
 The scripts can take an optional configuration file to modify the parameters for the calculations:
@@ -49,9 +86,6 @@ The scripts can take an optional configuration file to modify the parameters for
 ```python3 scripts/reproduce_all.py --config=path/to/config.yml```
 
 If no configuration file is passed, configs/defaults.yml will be used, which contains the values used for the figures present in the final version of the manuscript.
-
-By default, a data and figures folder will be created in the repository's root directory.
-This can be changed in the configuration file.
 
 ## About the `store` and `doer` modules
 Some computations can take a while, specially when array dimensions get somewhat large.
@@ -78,34 +112,6 @@ and
 
 in the configuration file,
 which will result in the whole calculation being done from scratch.
-
-## Data
-The full dataset that is produced by this code with the default configuration,
-and that appears in the figures present in the final version of the manuscript,
-is available on Zenodo:
-
-**TODO**
-
-Here are the steps to use it:
-1. Download the dataset from the link above
-2. Extract it in the repository's root directory: ```tar -xzvf data.tar.gz .```
-3. As a result the whole directory structure should look like this:
-```
-QtoC-Krylov/
-    configs/
-    data/
-        calculations/ # this is where 'doer' puts data
-        operators/ # this is where 'store' puts data
-    docs/
-    scripts/
-    src/
-    tests
-```
-4. Alternatively, you can extract it elsewhere and edit the `DOER_DIR` and `STORE_DIR` variables in the configuration file.
-
-You can now run the code as described above.
-
-**Note:** the full dataset is 9 GB.
 
 ## Citation
 If you use the code from this repository in your research,
