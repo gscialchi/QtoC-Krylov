@@ -47,7 +47,7 @@ see the [Data](#data) section below.
 ## Data
 The code will automatically check whether
 the computations have already been made and the outputs stored
-in order to load it
+in order to load them
 (see [About the `store` and `doer` modules](#about-the-store-and-doer-modules)).
 
 The full dataset that is produced by this code with the default configuration
