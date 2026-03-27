@@ -55,7 +55,7 @@ The full dataset that is produced by this code with the default configuration
 and that appears in the figures present in the final version of the manuscript,
 is available on Zenodo:
 
-https://doi.org/10.5281/zenodo.19226991
+https://doi.org/10.5281/zenodo.19226990
 
 Here are the steps to use it:
 1. Download the dataset from the link above
@@ -117,7 +117,7 @@ which will result in the whole calculation being done from scratch.
 If you use the code from this repository in your research,
 please cite:
 
-https://doi.org/10.5281/zenodo.19226136
+https://doi.org/10.5281/zenodo.19226135
 
 If you use the results of the paper, please cite:
 ```
