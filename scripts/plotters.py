@@ -3,7 +3,7 @@ import os
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+from mpl_toolkits.axes_grid1 import ImageGrid
 
 from qtoc_krylov.evolve import evolve_map
 from qtoc_krylov.harmonic import husimi_operator, husimi_state
@@ -167,41 +167,27 @@ def plot_states_correspondence(cl, qus, qlim, plim, N, hbars=None, Nqus=None,
     else:
         ncols = min([len(cl), len(qus[0])])
     nrows = len(ms) + 1
-    fig, axes = plt.subplots(nrows, ncols)
-    dpi = fig.get_dpi() # to convert px to inches
-    scale = 1.5
 
-    ## get x-size of ylabel text
-    text0 = axes[0, 0].set_ylabel(r'Classical', size=size)
-    for m, ax in zip(ms[::-1], axes[1:, 0]):
-        pow = int(np.floor(np.log2(m)))
-        ax.set_ylabel(mlabel + rf'=2^{{{pow}}}$', size=size)
+    scale = 1.875
+    fig = plt.figure(figsize=(scale*ncols, scale*nrows))
+    grid = ImageGrid(fig, 111, nrows_ncols=(nrows, ncols),
+                     axes_pad=0, cbar_mode='edge', cbar_location='right', cbar_pad=0.05)
 
-    bbox0 = text0.get_window_extent()
-    dx0 = (bbox0.x1 - bbox0.x0)/dpi
-    dx0 += 0.5*dx0 # some padding
+    left = [i for i in range(ncols*nrows) if i%ncols == 0]
+    right = [i for i in range(ncols*nrows) if (i-ncols+1)%ncols == 0]
+    top = [i for i in range(ncols*nrows) if i < ncols]
+    bottom = [i for i in range(ncols*nrows) if i >= (nrows -1)*ncols]
 
-    ## get ysize of title text
-    for n, k in zip(range(ncols), which):
-        text1 = axes[0, n].set_title(rf'$t={k}$', size=size)
-    bbox1 = text1.get_window_extent()
-    dx1 = (bbox1.y1 - bbox1.y0)/dpi
-    dx1 += 0.5*dx1
+    grid[0].set_ylabel(r'Classical', size=size)
+    for i, ax in enumerate(grid):
+        if (i in left) and (i > 0):
+            m = ms[::-1][i%nrows-1]
+            pow = int(np.floor(np.log2(m)))
+            ax.set_ylabel(mlabel + rf'=2^{{{pow}}}$', size=size)
+        if i in top: ax.set_title(rf'$t={which[i]}$', size=size)
 
-    ## set figure size accordingly
-    f_width = 2*dx0 + scale*ncols
-    f_height = 2*dx1 + scale*nrows
-    figsize=(f_width, f_height)
-    fig.set_size_inches(figsize)
 
-    left = dx0/f_width
-    right = 1 - left
-    bottom = dx1/f_height
-    top = 1 - bottom
-    fig.subplots_adjust(hspace=0, wspace=0,
-                        left=left, right=right, bottom=bottom, top=top)
-
-    for ax in axes.flatten():
+    for ax in grid:
         ax.tick_params(which='both', bottom=False, left=False,
                        labelbottom=False, labelleft=False)
 
@@ -209,7 +195,7 @@ def plot_states_correspondence(cl, qus, qlim, plim, N, hbars=None, Nqus=None,
         qm, pm = evolve_map(map, n_steps=200, points=points,
                             n_evos=10,
                             qlim=qlim, plim=plim)
-        for ax in axes.flatten():
+        for ax in grid:
             ax.plot(qm.flatten(), pm.flatten(), ',', c='dimgrey', markersize=0.5, zorder=0)
 
     ##
@@ -217,6 +203,8 @@ def plot_states_correspondence(cl, qus, qlim, plim, N, hbars=None, Nqus=None,
     extent = [q[0], q[-1], p[0], p[-1]]
 
     ##
+    ims_cbar = []
+
     for n, k in zip(range(ncols), which):
         cl_op = cl[k]
 
@@ -228,9 +216,10 @@ def plot_states_correspondence(cl, qus, qlim, plim, N, hbars=None, Nqus=None,
             kmax = np.max(np.abs(cl_op))
 
         vmin, vmax = -kmax, kmax
-        axes[0, n].imshow(cl_op, origin='lower', extent=extent,
-                          vmin=vmin, vmax=vmax,
-                          cmap='seismic', zorder=1, alpha=alpha)
+        im = grid[n].imshow(cl_op, origin='lower', extent=extent,
+                            vmin=vmin, vmax=vmax,
+                            cmap='seismic', zorder=1, alpha=alpha)
+        if n == 0: ims_cbar.append(im)
 
 
     for j in range(len(ms)):
@@ -254,9 +243,18 @@ def plot_states_correspondence(cl, qus, qlim, plim, N, hbars=None, Nqus=None,
                 kmax = np.max(np.abs(hus))
 
             vmin, vmax = -kmax, kmax
-            axes[j+1, n].imshow(hus, origin='lower', extent=extent,
-                                vmin=vmin, vmax=vmax,
-                                cmap='seismic', zorder=1, alpha=alpha)
+            im = grid[(j+1)*ncols+n].imshow(hus, origin='lower', extent=extent,
+                                            vmin=vmin, vmax=vmax,
+                                            cmap='seismic', zorder=1,
+                                            alpha=alpha)
+            if n == 0: ims_cbar.append(im)
+
+    for i, (ax, im) in enumerate(zip(grid.cbar_axes, ims_cbar)):
+        cbar = ax.colorbar(im)
+        cbar.locator = mpl.ticker.MaxNLocator(3)
+        cbar.update_ticks()
+        if i == 0: cbar.set_label(r'$\kappa_t(q, p)$', size=size)
+        else: cbar.set_label(r'$H_{\kappa_t}(q, p)$', size=size)
 
     if save:
         savefig(fig, savedir, saveformat, bbox_inches='tight', dpi=fig.dpi)
