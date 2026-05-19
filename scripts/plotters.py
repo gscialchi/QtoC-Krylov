@@ -281,15 +281,18 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
     else:
         ncols = min([len(cl), len(qus[0])])
     nrows = 3
-    fig, axes = plt.subplots(nrows, ncols)
-    dpi = fig.get_dpi() # to convert px to inches
-    scale = 1.5
 
-    r_ket = 2
-    r_pure = 1
+    scale = 1.875
+    fig = plt.figure(figsize=(scale*ncols, scale*nrows))
+    grid = ImageGrid(fig, 111, nrows_ncols=(nrows, ncols),
+                     axes_pad=0, cbar_mode='edge', cbar_location='right', cbar_pad=0.05)
 
-    ## get x-size of ylabel text
-    text0 = axes[0, 0].set_ylabel(r'Classical', size=size)
+    left = [i for i in range(ncols*nrows) if i%ncols == 0]
+    right = [i for i in range(ncols*nrows) if (i-ncols+1)%ncols == 0]
+    top = [i for i in range(ncols*nrows) if i < ncols]
+    bottom = [i for i in range(ncols*nrows) if i >= (nrows -1)*ncols]
+
+    grid[0].set_ylabel(r'Classical', size=size)
 
     if usephysics:
         pure_label = r'$\ketbra{\alpha(q\,p)}$'
@@ -298,34 +301,10 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
         pure_label = r'Pure'
         ket_label = r'Ket'
 
-    axes[r_pure, 0].set_ylabel(pure_label, size=12)
-    axes[r_ket, 0].set_ylabel(ket_label, size=12)
+    grid[3].set_ylabel(pure_label, size=12)
+    grid[6].set_ylabel(ket_label, size=12)
 
-    bbox0 = text0.get_window_extent()
-    dx0 = (bbox0.x1 - bbox0.x0)/dpi
-    dx0 += 0.5*dx0 # some padding
-
-    ## get ysize of title text
-    for n, k in zip(range(ncols), which):
-        text1 = axes[0, n].set_title(rf'$t={k}$', size=size)
-    bbox1 = text1.get_window_extent()
-    dx1 = (bbox1.y1 - bbox1.y0)/dpi
-    dx1 += 0.5*dx1
-
-    ## set figure size accordingly
-    f_width = 2*dx0 + scale*ncols
-    f_height = 2*dx1 + scale*nrows
-    figsize=(f_width, f_height)
-    fig.set_size_inches(figsize)
-
-    left = dx0/f_width
-    right = 1 - left
-    bottom = dx1/f_height
-    top = 1 - bottom
-    fig.subplots_adjust(hspace=0, wspace=0,
-                        left=left, right=right, bottom=bottom, top=top)
-
-    for ax in axes.flatten():
+    for ax in grid:
         ax.tick_params(which='both', bottom=False, left=False,
                        labelbottom=False, labelleft=False)
 
@@ -333,7 +312,7 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
         qm, pm = evolve_map(map, n_steps=200, points=points,
                             n_evos=10,
                             qlim=qlim, plim=plim)
-        for ax in axes.flatten():
+        for ax in grid:
             ax.plot(qm.flatten(), pm.flatten(), ',', c='dimgrey', markersize=0.5, zorder=0)
 
     ##
@@ -341,6 +320,9 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
     extent = [q[0], q[-1], p[0], p[-1]]
 
     ##
+    ims_cbar = []
+
+    # classical
     for n, k in zip(range(ncols), which):
         cl_op = cl[k]
 
@@ -352,30 +334,14 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
             kmax = np.max(np.abs(cl_op))
 
         vmin, vmax = -kmax, kmax
-        axes[0, n].imshow(cl_op, origin='lower', extent=extent,
-                          vmin=vmin, vmax=vmax,
-                          cmap='seismic', zorder=1, alpha=alpha)
+        im = grid[n].imshow(cl_op, origin='lower', extent=extent,
+                            vmin=vmin, vmax=vmax,
+                            cmap='seismic', zorder=1, alpha=alpha)
+        if n == 0: ims_cbar.append(im)
+        grid[n].set_title(rf'$t={which[n]}$', size=size)
 
 
     for n, k in zip(range(ncols), which):
-        # ket
-        if not cutoffs is None:
-            hus_ket = husimi_state(q, p, ket[k], cutoffs, hbar=hbar)
-        else:
-            hus_ket = husimi_torus_state(q, p, ket[k], N_q)
-
-        if norm_from_k0 and (n == 0):
-            kmax_ket = np.max(np.abs(hus_ket))
-        elif norm_from_k0 and (n != 0):
-            ...
-        else:
-            kmax_ket = np.max(np.abs(hus_ket))
-
-        vmin_ket, vmax_ket = -kmax_ket, kmax_ket
-        axes[r_ket, n].imshow(hus_ket, origin='lower', extent=extent,
-                              vmin=vmin_ket, vmax=vmax_ket,
-                              cmap='seismic', zorder=1, alpha=alpha)
-
         # pure
         if not cutoffs is None:
             hus_pure = husimi_operator(q, p, pure[k], cutoffs, hbar=hbar)
@@ -390,9 +356,37 @@ def plot_states_ket_pure_cl(cl, ket, pure, qlim, plim, N, hbar=None, N_q=None,
             kmax_pure = np.max(np.abs(hus_pure))
 
         vmin_pure, vmax_pure = -kmax_pure, kmax_pure
-        axes[r_pure, n].imshow(hus_pure, origin='lower', extent=extent,
-                               vmin=vmin_pure, vmax=vmax_pure,
-                               cmap='seismic', zorder=1, alpha=alpha)
+        im = grid[3+n].imshow(hus_pure, origin='lower', extent=extent,
+                              vmin=vmin_pure, vmax=vmax_pure,
+                              cmap='seismic', zorder=1, alpha=alpha)
+        if n == 0: ims_cbar.append(im)
+
+        # ket
+        if not cutoffs is None:
+            hus_ket = husimi_state(q, p, ket[k], cutoffs, hbar=hbar)
+        else:
+            hus_ket = husimi_torus_state(q, p, ket[k], N_q)
+
+        if norm_from_k0 and (n == 0):
+            kmax_ket = np.max(np.abs(hus_ket))
+        elif norm_from_k0 and (n != 0):
+            ...
+        else:
+            kmax_ket = np.max(np.abs(hus_ket))
+
+        vmin_ket, vmax_ket = -kmax_ket, kmax_ket
+        im = grid[6+n].imshow(hus_ket, origin='lower', extent=extent,
+                              vmin=vmin_ket, vmax=vmax_ket,
+                              cmap='seismic', zorder=1, alpha=alpha)
+        if n == 0: ims_cbar.append(im)
+
+
+    for i, (ax, im) in enumerate(zip(grid.cbar_axes, ims_cbar)):
+        cbar = ax.colorbar(im)
+        cbar.locator = mpl.ticker.MaxNLocator(3)
+        cbar.update_ticks()
+        if i == 0: cbar.set_label(r'$\kappa_t(q, p)$', size=size)
+        else: cbar.set_label(r'$H_{\kappa_t}(q, p)$', size=size)
 
     if save:
         savefig(fig, savedir, saveformat, bbox_inches='tight', dpi=fig.dpi)
@@ -429,8 +423,8 @@ def plot_complexity_ket_pure_cl_limit(cl, ket, pure, hs, up_to=None,
         pure_label = r'$\ketbra{\alpha(q\,p)}$'
         ket_label = r'$\ket{\alpha(q\,p)}$'
     else:
-        pure_label = r'Pure'
-        ket_label = r'Ket'
+        pure_label = r' Pure'
+        ket_label = r' Ket'
 
     axes[0].set_ylabel(ck_label + r' (Classical vs.'+pure_label+')', size=size)
     axes[1].set_ylabel(ck_label + r' (Classical vs.'+ket_label+')', size=size)
